@@ -12,8 +12,6 @@ class Volunteers(UserMixin, db.Model):
     password = db.Column(db.Text)
     name = db.Column(db.Text)
     phone = db.Column(db.BigInteger)
-    states_of_interest = db.relationship('VolunteerStates',
-                                         backref='volunteer_id')
 
 
 class StateInterests(db.Model):
@@ -28,7 +26,7 @@ class Teams(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Text)  # fine if it's blank
     description = db.Column(db.Text)
-    team_volunteers = db.relationship('TeamVolunteers', backref='team_id')
+    team_state = db.Column(db.String(2), db.ForeignKey('states.abbrev'))
 
 
 class TeamVolunteers(db.Model):
@@ -46,8 +44,7 @@ class States(db.Model):
     leg_period = db.Column(db.Text)
     supreme_court = db.Column(db.Text)
     redistricting = db.Column(db.Text)
-    steate_teams = db.relationship('VolunteerTeams', backref='state')
-    state_interests = db.relationship('StateInterests', backref='state')
+    state_teams = db.relationship('Teams', backref='state')
 
 
 class Legislation(db.Model):
@@ -68,7 +65,6 @@ class Legislation(db.Model):
     targets = db.Column(db.Text)
     doj_response = db.Column(db.Text)
     sources = db.Column(db.Text)
-    engagements = db.relationship('Engagements', backref='legislation_id')
 
 
 class Engagements(db.Model):
@@ -80,7 +76,6 @@ class Engagements(db.Model):
     status_updated = db.Column(db.Date, nullable=False,
                                server_default="CURRENT_DATE")
     closed = db.Column(db.Boolean)
-    actions = db.relationship('Actions', backref='engagement_id')
 
 
 class Groups(db.Model):
@@ -89,7 +84,6 @@ class Groups(db.Model):
     desc = db.Column(db.Text)
     goals = db.Column(db.Text)
     contact = db.Column(db.Text)
-    engagements = db.relationship('Engagements', backref='engagement_id')
 
 
 class EngagementGroups(db.Model):
