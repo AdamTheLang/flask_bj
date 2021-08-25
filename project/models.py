@@ -79,11 +79,33 @@ class Engagements(db.Model):
 
 
 class Groups(db.Model):
+    org_name = db.Column(db.String(40))
+    org_url = db.Column(db.String(200))
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.Text)
-    desc = db.Column(db.Text)
-    goals = db.Column(db.Text)
-    contact = db.Column(db.Text)
+    state = db.Column(db.String(2), db.ForeignKey('states.abbrev'))
+    issues = db.Column(db.String(20))
+    populations = db.Column(db.String(20))
+    actions = db.Column(db.Text)
+    bj_contact = db.Column(db.String(40))
+    first_contact = db.Column(db.Date)
+    latest_contact = db.Column(db.Date)
+    followup = db.Column(db.Text)
+    notes = db.Column(db.Text)
+    contact_name = db.Column(db.Text)
+    contact_title = db.Column(db.Text)
+    contact_phone = db.Column(db.BigInteger)
+    contact_email = db.Column(db.Text)
+
+
+# class GroupPrimaryIssues(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     group_id = db.Column(db.Integer, db.ForeignKey('groups.id'))
+#     issue_key = db.Column(db.String(20), db.ForeignKey('issues.issue_key'))
+#
+#
+# class Issues(db.Model):
+#     issue_key = db.Column(db.String(20), primary_key=True)
+#     issue_name = db.Column(db.Text)
 
 
 class EngagementGroups(db.Model):

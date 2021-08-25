@@ -1,0 +1,28 @@
+<!-- templates/profile.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+    <p><font size="+4">Edit Organization</font></p>
+    <form method="POST">
+        {{ form.csrf_token }}
+
+        {% from "_formhelpers.html" import render_field %}
+        {{ render_field(form.org_name, size=80) }}
+        {{ render_field(form.org_url, size=80) }}
+        {{ render_field(form.state) }}
+        {{ render_field(form.issues) }}
+        {{ render_field(form.populations) }}
+        {{ render_field(form.actions, rows=8, cols=79) }}
+        {{ render_field(form.bj_contact, size=80) }}
+        {{ render_field(form.first_contact, placeholder="e.g. 2021-03-02") }}
+        {{ render_field(form.latest_contact, placeholder="e.g. 2021-03-02") }}
+        {{ render_field(form.followup, rows=8, cols=79) }}
+        {{ render_field(form.notes, rows=8, cols=79) }}
+        {{ render_field(form.contact_name, size=80) }}
+        {{ render_field(form.contact_title, size=80) }}
+        {{ render_field(form.contact_phone, size=80) }}
+        {{ render_field(form.contact_email, size=80) }}
+        <input type="submit" value="Save" style="width: 100px; height: 35px;">
+    </form>
+{% endblock %}
