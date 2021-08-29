@@ -1,1 +1,3 @@
-<td><a href="/edit_org/{{ org.org_id }}">{{ org.org_name }}</a></td><td>{{ org.state }}</td>
+{% macro org_list_item(org) %}
+    <tr><td><a href="/edit_org/{{ org.org_id }}">{{ org.org_name }}</a></td><td>{{ org.state }}</td></tr>
+{% endmacro %}
