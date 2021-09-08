@@ -39,7 +39,7 @@ def edit_org(org_id=None):
         form.populate_obj(org)
         db.session.add(org)
         db.session.commit()
-        return redirect('/org_find')
+        return redirect('/find_org')
 
     return render_template('edit_org.html', form=form)
 
@@ -52,12 +52,14 @@ def find_org():
     print(form.state.data)
     query = models.Groups.query
     if form.org_name.data:
-        query = query.filter_by(org_name=form.org_name)
+        query = query.filter(
+            models.Groups.org_name.like('%' + form.org_name.data + '%')
+        )
     if form.state.data and form.state.data != 'Any':
         query = query.filter_by(state=form.state.data)
     if form.issue.data and form.issue.data != 'Any':
         query = query.filter_by(issues=form.issue.data)
-    if form.population.data and form.issue.data != 'Any':
+    if form.population.data and form.population.data != 'Any':
         query = query.filter_by(populations=form.population.data)
     print(query)
     results = list(query.all())

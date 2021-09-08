@@ -9,7 +9,13 @@ from wtforms.fields import (
     TextAreaField,
 )
 from wtforms import validators
+from wtforms.ext.sqlalchemy.fields import (
+    QuerySelectField,
+    QuerySelectMultipleField
+)
 from flask_wtf import FlaskForm
+
+from project import models
 
 class ProfileForm(FlaskForm):
     username = StringField('Name', [validators.Length(min=4, max=40)])
@@ -25,25 +31,6 @@ class ProfileForm(FlaskForm):
     confirm = PasswordField('Repeat Password')
 
 
-STATE_ABBREV = ('AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA',
-                'HI', 'ID', 'IL', 'IN', 'IO', 'KS', 'KY', 'LA', 'ME', 'MD',
-                'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ',
-                'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC',
-                'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY')
-
-ISSUES = (
-    ('ISSUE_1', 'Issue 1'),
-    ('ISSUE_2', 'Issue 2'),
-    ('ISSUE_3', 'Issue 3'),
-)
-
-POPULATIONS = (
-    ('POP_1', 'Population 1'),
-    ('POP_2', 'Population 2'),
-    ('POP_3', 'Population 3'),
-)
-
-
 def is_phone(form, field):
     digits = ''.join(filter(str.isdigit, field.data))
     if not (1999999999 < int(digits) < 19999999999):
@@ -52,43 +39,87 @@ def is_phone(form, field):
 
 
 class OrganizationSearchForm(FlaskForm):
-    org_name = StringField('Org Name', [validators.Length(min=4, max=40)])
+    def __init__(self, *args, **kwargs):
+        super(OrganizationSearchForm, self).__init__(*args, **kwargs)
+        states = models.States.query.order_by(models.States.name).all()
+        self.state.choices = (
+            [('Any', 'Any'), ] + [(s.abbrev, s.name) for s in states]
+        )
+
+        issues = models.Issues.query.order_by(models.Issues.issue_name).all()
+        self.issue.choices = (
+            [('Any', 'Any'), ] + [(i.issue_key, i.issue_name) for i in issues]
+        )
+
+        pops = models.Populations.query.order_by(
+            models.Populations.pop_name
+        ).all()
+        self.population.choices = (
+            [('Any', 'Any'), ] + [(p.pop_key, p.pop_name) for p in pops]
+        )
+
+    org_name = StringField('Org Name')
 
     state = SelectField(
         label='State',
-        choices=[('Any', 'Any')] + [(state, state) for state in STATE_ABBREV]
     )
 
     issue = SelectField(
         label='Primary Issues',
-        choices=(('Any', 'Any'),) + ISSUES,
     )
 
     population = SelectField(
         label='Populations Served',
-        choices=(('Any', 'Any'),) + POPULATIONS
     )
 
+
+def _state_query_factory():
+    return models.States.query.order_by(models.States.name).all()
+
+
+def _issue_query_factory():
+    return models.Issues.query.order_by(models.Issues.issue_name).all()
+
+
+def _pop_query_factory():
+    return models.Populations.query.order_by(models.Populations.pop_name).all()
 
 
 class OrganizationEditForm(FlaskForm):
+
     id = IntegerField()
     org_name = StringField('Org Name', [validators.Length(min=4, max=40)])
-    org_url = StringField('Org URL', [validators.Length(max=200)])
+    org_url = StringField(
+        'Org URL',
+        [
+            validators.Optional(),
+            validators.Length(max=200),
+            validators.URL(message='Invalid URL')
+        ]
+    )
 
-    state = SelectField(
+    social_media_url = StringField(
+        'Social Media URL',
+        [
+            validators.Optional(),
+            validators.Length(max=200),
+            validators.URL(message='Invalid URL')
+        ]
+    )
+
+    state = QuerySelectField(
         label='State',
-        choices=[(state, state) for state in STATE_ABBREV]
+        query_factory=_state_query_factory
     )
 
-    issues = SelectField(
+    issues = QuerySelectMultipleField(
         label='Primary Issues',
-        choices=ISSUES,
+        query_factory=_issue_query_factory
     )
 
-    populations = SelectField(
+    populations = QuerySelectMultipleField(
         label='Populations Served',
-        choices=POPULATIONS
+        query_factory=_pop_query_factory
     )
 
     actions = TextAreaField(
@@ -131,10 +162,14 @@ class OrganizationEditForm(FlaskForm):
 
     contact_phone = StringField(
         label='Contact Phone',
-        validators=[is_phone]
+        validators=[validators.Optional(), is_phone]
     )
 
     contact_email = StringField(
         label='Email Address',
-        validators=[validators.Length(max=50), validators.Email(),]
+        validators=[
+            validators.Optional(),
+            validators.Length(max=50),
+            validators.Email(),
+        ]
     )

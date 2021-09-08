@@ -3,7 +3,7 @@
 from flask_login import UserMixin
 from sqlalchemy.sql import func
 
-from . import db
+from project import db
 
 
 class Volunteers(UserMixin, db.Model):
@@ -38,6 +38,9 @@ class TeamVolunteers(db.Model):
 
 
 class States(db.Model):
+    def __str__(self):
+        return self.name
+
     abbrev = db.Column(db.String(2), primary_key=True)
     name = db.Column(db.Text)
     government_desc = db.Column(db.Text)
@@ -78,13 +81,34 @@ class Engagements(db.Model):
     closed = db.Column(db.Boolean)
 
 
+group_issues = db.Table(
+    'group_issues',
+    db.Column('group_id', db.Integer, db.ForeignKey('groups.id')),
+    db.Column('issue_key', db.String(20), db.ForeignKey('issues.issue_key'))
+)
+
+
+group_populations = db.Table(
+    'group_populations',
+    db.Column('group_id', db.Integer, db.ForeignKey('groups.id')),
+    db.Column('pop_key', db.String(20), db.ForeignKey('populations.pop_key'))
+)
+
+
 class Groups(db.Model):
+    def __str__(self):
+        return self.org_name
+
+    id = db.Column(db.Integer, primary_key=True)
+
     org_name = db.Column(db.String(40))
     org_url = db.Column(db.String(200))
-    id = db.Column(db.Integer, primary_key=True)
+    social_media_url = db.Column(db.String(200))
     state = db.Column(db.String(2), db.ForeignKey('states.abbrev'))
-    issues = db.Column(db.String(20))
-    populations = db.Column(db.String(20))
+
+    issues = db.relationship("Issues", secondary=group_issues)
+    populations = db.relationship("Populations", secondary=group_populations)
+
     actions = db.Column(db.Text)
     bj_contact = db.Column(db.String(40))
     first_contact = db.Column(db.Date)
@@ -97,15 +121,20 @@ class Groups(db.Model):
     contact_email = db.Column(db.Text)
 
 
-# class GroupPrimaryIssues(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     group_id = db.Column(db.Integer, db.ForeignKey('groups.id'))
-#     issue_key = db.Column(db.String(20), db.ForeignKey('issues.issue_key'))
-#
-#
-# class Issues(db.Model):
-#     issue_key = db.Column(db.String(20), primary_key=True)
-#     issue_name = db.Column(db.Text)
+class Issues(db.Model):
+    def __str__(self):
+        return self.issue_name
+
+    issue_key = db.Column(db.String(20), primary_key=True)
+    issue_name = db.Column(db.Text)
+
+
+class Populations(db.Model):
+    def __str__(self):
+        return self.pop_name
+
+    pop_key = db.Column(db.String(20), primary_key=True)
+    pop_name = db.Column(db.Text)
 
 
 class EngagementGroups(db.Model):
