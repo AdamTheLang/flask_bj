@@ -10,6 +10,7 @@ sqlalchemy = "*"
 flask-sqlalchemy = "*"
 flask-login = "*"
 email-validator = "*"
+wheel = "*"
 
 [dev-packages]
 
