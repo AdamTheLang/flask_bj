@@ -28,14 +28,15 @@ def login_post():
 
     # if the above check passes, then we know the user has the right credentials
     login_user(user, remember=remember)
-    return redirect(url_for('main.profile'))
+    return redirect('/')
 
-@auth.route('/signup')
+@auth.route('/add_user')
 @login_required
 def signup():
     return render_template('signup.html')
 
-@auth.route('/signup', methods=['POST'])
+@auth.route('/add_user', methods=['POST'])
+@login_required
 def signup_post():
 
     email = request.form.get('email')
@@ -55,7 +56,7 @@ def signup_post():
     db.session.add(new_user)
     db.session.commit()
 
-    return redirect(url_for('auth.login'))
+    return redirect(url_for('auth.signup'))
 
 
 @auth.route('/logout')
