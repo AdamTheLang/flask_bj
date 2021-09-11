@@ -3,44 +3,43 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <p><font size="+4">Edit Organization</font></p>
+    <p><font size="+2">Add/Edit</font><br>
+    <font size="+4">Activist Organization</font></p>
     <form method="POST">
         {{ form.csrf_token }}
-
         {% from "_formhelpers.html" import render_field %}
         <fieldset>
-            <p><font size="+2">General Information</font></p>
+            <p class="tab10"><font size="+2">General Information</font></p>
             {{ render_field(form.org_name, size=80) }}
             {{ render_field(form.org_url, size=80) }}
             {{ render_field(form.social_media_url, size=80) }}
-            {{ render_field(form.state) }}
+            {{ render_field(form.state) }}<br>
             {{ render_field(form.issues) }}
             <font size="-1">
                 Select multiple: control-click (Windows)/command-click (Mac)
-            </font>
-            {{ render_field(form.populations) }}
-            {{ render_field(form.actions, rows=8, cols=79) }}
-            <br>
+            </font><br><br>
+            {{ render_field(form.populations) }}<br>
+            {{ render_field(form.actions, rows=8, cols=79) }} <br> 
         </fieldset>
         <br>
         <fieldset>
-            <p><font size="+2">BJ Interactions</font></p>
+            <p class="tab10"><font size="+2">BJ Interactions</font></p>
             {{ render_field(form.bj_contact, size=80) }}
             {{ render_field(form.first_contact, placeholder="e.g. 2021-03-02") }}
-            {{ render_field(form.latest_contact, placeholder="e.g. 2021-03-02") }}
-            {{ render_field(form.followup, rows=8, cols=79) }}
+            {{ render_field(form.latest_contact, placeholder="e.g. 2021-03-02") }} <br>
+            {{ render_field(form.followup, rows=8, cols=79) }} <br>
             {{ render_field(form.notes, rows=8, cols=79) }}
             <br>
         </fieldset>
         <br>
         <fieldset>
-            <p><font size="+2">Contact Information</font></p>
+            <p class="tab10"><font size="+2">Organization Contact Information</font></p>
             {{ render_field(form.contact_name, size=80) }}
             {{ render_field(form.contact_title, size=80) }}
             {{ render_field(form.contact_phone, size=80) }}
             {{ render_field(form.contact_email, size=80) }}
             <br>
-        </fieldset>
+        </fieldset><br>
         <input type="submit" value="Save" style="width: 100px; height: 35px;">
     </form>
 {% endblock %}
