@@ -74,10 +74,7 @@ class OrganizationSearchForm(FlaskForm):
 
 
 def _state_query_factory():
-    return [
-        models.States(name='', abbrev='') +
-        models.States.query.order_by(models.States.name).all()
-    ]
+    return models.States.query.order_by(models.States.name).all()
 
 
 def not_empty_state(form, field):
