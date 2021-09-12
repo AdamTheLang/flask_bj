@@ -13,13 +13,14 @@
             {{ render_field(form.org_name, size=80) }}
             {{ render_field(form.org_url, size=80) }}
             {{ render_field(form.social_media_url, size=80) }}
-            {{ render_field(form.state) }}<br>
-            {{ render_field(form.issues) }}
+            {{ render_field(form.state_obj) }}<br>
+            {{ render_field(form.issues, size=8) }}
             <p class="tab10"><font size="-1">
                 Select multiple: control-click (Windows)/command-click (Mac)
-            </font></p>
-            {{ render_field(form.populations) }}<br>
-            {{ render_field(form.actions, rows=8, cols=79) }} <br> 
+            </font></p><br>
+            {{ render_field(form.populations, size=8) }}<br>
+            {{ render_field(form.actions, rows=8, cols=79) }}
+            <br>
         </fieldset>
         <br>
         <fieldset>

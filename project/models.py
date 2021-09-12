@@ -105,6 +105,7 @@ class Groups(db.Model):
     org_url = db.Column(db.String(200))
     social_media_url = db.Column(db.String(200))
     state = db.Column(db.String(2), db.ForeignKey('states.abbrev'))
+    state_obj = db.relationship("States")
 
     issues = db.relationship("Issues", secondary=group_issues)
     populations = db.relationship("Populations", secondary=group_populations)
@@ -152,6 +153,9 @@ class EngagementTeams(db.Model):
 class Actions(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Text)
+    group = db.Column(db.Integer, db.ForeignKey('groups.id'))
+    state = db.Column(db.String(2), db.ForeignKey('states.abbrev'))
+
     desc = db.Column(db.Text)
     engagement_id = db.Column(db.Integer, db.ForeignKey('engagements.id'))
     status = db.Column(db.Text)
