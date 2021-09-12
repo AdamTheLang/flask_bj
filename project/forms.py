@@ -107,7 +107,7 @@ class OrganizationEditForm(FlaskForm):
         ]
     )
 
-    state = QuerySelectField(
+    state_obj = QuerySelectField(
         label='State',
         query_factory=_state_query_factory
     )
