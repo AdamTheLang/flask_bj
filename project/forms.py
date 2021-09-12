@@ -138,7 +138,7 @@ class OrganizationEditForm(FlaskForm):
     )
 
     latest_contact = DateField(
-        label='Latest Contact'
+        label='Latest Contact',
         validators=[validators.Optional()]
     )
 
