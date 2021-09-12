@@ -74,7 +74,16 @@ class OrganizationSearchForm(FlaskForm):
 
 
 def _state_query_factory():
-    return models.States.query.order_by(models.States.name).all()
+    return [
+        models.States(name='', abbrev='') +
+        models.States.query.order_by(models.States.name).all()
+    ]
+
+
+def not_empty_state(form, field):
+    if field.data.abbrev == '':
+        raise validators.ValidationError("You must choose a state, or 'national'.")
+    return True
 
 
 def _issue_query_factory():
@@ -109,7 +118,8 @@ class OrganizationEditForm(FlaskForm):
 
     state_obj = QuerySelectField(
         label='State',
-        query_factory=_state_query_factory
+        query_factory=_state_query_factory,
+        validators=[not_empty_state]
     )
 
     issues = QuerySelectMultipleField(

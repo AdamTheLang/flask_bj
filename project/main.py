@@ -58,9 +58,11 @@ def find_org():
     if form.state.data and form.state.data != 'Any':
         query = query.filter_by(state=form.state.data)
     if form.issue.data and form.issue.data != 'Any':
-        query = query.filter_by(issues=form.issue.data)
+        query = query.filter(models.Groups.issues.any(models.Issues.issue_key==form.issue.data))
     if form.population.data and form.population.data != 'Any':
-        query = query.filter_by(populations=form.population.data)
+        query = query.filter(
+            models.Groups.populations.any(models.Populations.pop_key==form.population.data)
+        )
     print(query)
     results = list(query.all())
 
