@@ -3,8 +3,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <p><font size="+2">Add/Edit</font><br>
-    <font size="+4">Activist Organization</font></p>
+    <p><font size="+2">Add/Edit</font>
+    <p><font size="+4">Activist Organization</font>
     <form method="POST">
         {{ form.csrf_token }}
         {% from "_formhelpers.html" import render_field %}
@@ -14,7 +14,7 @@
             {{ render_field(form.org_url, size=80) }}
             {{ render_field(form.social_media_url, size=80) }}
             {{ render_field(form.state) }}<br>
-            {{ render_field(form.issues) }}
+            {{ render_field(form.issues) }}<br>
             <font size="-1">
                 Select multiple: control-click (Windows)/command-click (Mac)
             </font><br><br>
