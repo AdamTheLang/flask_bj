@@ -141,11 +141,13 @@ class OrganizationEditForm(FlaskForm):
 
     first_contact = DateField(
         label='First Contacted',
+        format='%m/%d/%Y',
         validators=[validators.Optional()]
     )
 
     latest_contact = DateField(
         label='Latest Contact',
+        format='%m/%d/%Y',
         validators=[validators.Optional()]
     )
 

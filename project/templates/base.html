@@ -22,35 +22,49 @@
             <nav class="navbar">
                 <div class="container">
 
-                    <div id="navbarMenuHeroA" class="navbar-menu">
+                    <div id="navbarMenuHeroA">
                         <div class="navbar-start">
-                            <a href="{{ url_for('main.index') }}" class="navbar-item">
-                                Home
-                            </a>
-                            {% if current_user.is_authenticated %}
-                            <a href="{{ url_for('main.profile') }}" class="navbar-item">
-                                Profile
-                            </a>
-                            <a href="{{ url_for('auth.signup') }}" class="navbar-item">
-                                New User
-                            </a>
-                            <a href="/edit_org" class="navbar-item">
-                                New Organization
-                            </a>
-                            <a href="/find_org" class="navbar-item">
-                                Find Organization
-                            </a>
-                            {% endif %}
-                            {% if not current_user.is_authenticated %}
-                            <a href="{{ url_for('auth.login') }}" class="navbar-item">
-                                Login
-                            </a>
-                            {% endif %}
-                            {% if current_user.is_authenticated %}
-                            <a href="{{ url_for('auth.logout') }}" class="navbar-item">
-                                Logout
-                            </a>
-                            {% endif %}
+                            <table><tr>
+                                <th>
+                                    <a href="{{ url_for('main.index') }}" class="navbar-item">
+                                        Home
+                                    </a>
+                                </th>
+                                {% if current_user.is_authenticated %}
+                                    <th>
+                                        <a href="{{ url_for('main.profile') }}" class="navbar-item">
+                                            Profile
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a href="{{ url_for('auth.signup') }}" class="navbar-item">
+                                            New User
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a href="/edit_org" class="navbar-item">
+                                            New Organization
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a href="/find_org" class="navbar-item">
+                                            Find Organization
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a href="{{ url_for('auth.logout') }}" class="navbar-item">
+                                            Logout
+                                        </a>
+                                    </th>
+                                {% endif %}
+                                {% if not current_user.is_authenticated %}
+                                    <th>
+                                        <a href="{{ url_for('auth.login') }}" class="navbar-item">
+                                            Login
+                                        </a>
+                                    </th>
+                                {% endif %}
+                            </tr></table>
                         </div>
                     </div>
                 </div>
