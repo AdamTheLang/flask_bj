@@ -25,44 +25,44 @@
                     <div id="navbarMenuHeroA">
                         <div class="navbar-start">
                             <table><tr>
-                                <th>
+                                <td>
                                     <a href="{{ url_for('main.index') }}" class="navbar-item">
                                         Home
                                     </a>
-                                </th>
+                                </td>
                                 {% if current_user.is_authenticated %}
-                                    <th>
+                                    <td>
                                         <a href="{{ url_for('main.profile') }}" class="navbar-item">
                                             Profile
                                         </a>
-                                    </th>
-                                    <th>
+                                    </td>
+                                    <td>
                                         <a href="{{ url_for('auth.signup') }}" class="navbar-item">
                                             New User
                                         </a>
-                                    </th>
-                                    <th>
+                                    </td>
+                                    <td>
                                         <a href="/edit_org" class="navbar-item">
                                             New Organization
                                         </a>
-                                    </th>
-                                    <th>
+                                    </td>
+                                    <td>
                                         <a href="/find_org" class="navbar-item">
                                             Find Organization
                                         </a>
-                                    </th>
-                                    <th>
+                                    </td>
+                                    <td>
                                         <a href="{{ url_for('auth.logout') }}" class="navbar-item">
                                             Logout
                                         </a>
-                                    </th>
+                                    </td>
                                 {% endif %}
                                 {% if not current_user.is_authenticated %}
-                                    <th>
+                                    <td>
                                         <a href="{{ url_for('auth.login') }}" class="navbar-item">
                                             Login
                                         </a>
-                                    </th>
+                                    </td>
                                 {% endif %}
                             </tr></table>
                         </div>
