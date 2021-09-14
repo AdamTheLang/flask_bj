@@ -1,8 +1,8 @@
 # auth.py
 
-from flask import Blueprint, render_template, redirect, url_for, request, flash
+from flask import abort, Blueprint, render_template, redirect, url_for, request, flash
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import login_user, logout_user, login_required
+from flask_login import current_user, login_user, logout_user, login_required
 from .models import Volunteers
 from . import db
 
@@ -11,6 +11,7 @@ auth = Blueprint('auth', __name__)
 @auth.route('/login')
 def login():
     return render_template('login.html')
+
 
 @auth.route('/login', methods=['POST'])
 def login_post():
@@ -30,10 +31,12 @@ def login_post():
     login_user(user, remember=remember)
     return redirect('/')
 
+
 @auth.route('/add_user')
 @login_required
 def signup():
     return render_template('signup.html')
+
 
 @auth.route('/add_user', methods=['POST'])
 @login_required
@@ -56,7 +59,35 @@ def signup_post():
     db.session.add(new_user)
     db.session.commit()
 
-    return redirect(url_for('auth.signup'))
+    return redirect('/')
+
+
+# @main.route('/profile')
+# @login_required
+# def profile():
+#     return render_template('profile.html', name=current_user.name)
+#
+#
+# @auth.route('/profile', methods=['POST'])
+# @login_required
+# def profile_post():
+#
+#     email = request.form.get('email')
+#
+#     user = Volunteers.query.filter_by(email=email).first() # if this returns a user, then the email already exists in database
+#
+#     if not user: # if a user is found, we want to redirect back to signup page so user can try again
+#         flash("Oh dear. Something bad has happened, and I don't know what")
+#         abort(500)
+#
+#     # create new user with the form data. Hash the password so plaintext version isn't saved.
+#     new_user = Volunteers(email=email, name=name, password=generate_password_hash(password, method='sha256'))
+#
+#     # add the new user to the database
+#     db.session.add(new_user)
+#     db.session.commit()
+#
+#     return redirect('/')
 
 
 @auth.route('/logout')

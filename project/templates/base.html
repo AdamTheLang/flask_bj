@@ -9,11 +9,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Join The Fight!</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
-    <style type="text/css">   
-     .tab20 { margin-left: 20px; }
-     .tab10 { margin-left: 10px; }
-     .tab5 { margin-left: 5px; }        
-     input { height: 40px; font-size:25px;  }
+    <style type="text/css">
+         .tab20 { margin-left: 20px; }
+         .tab10 { margin-left: 10px; }
+         .tab5 { margin-left: 5px; }
+         input { height: 40px; font-size:25px;  }
+         textarea { font-size:25px; }
+         select { font-size:15px; }
     </style>
 </head>
 
@@ -34,7 +36,7 @@
                                 </td>
                                 {% if current_user.is_authenticated %}
                                     <td>
-                                        <a href="{{ url_for('main.profile') }}" class="navbar-item">
+                                        <a href="/profile" class="navbar-item">
                                             Profile
                                         </a>
                                     </td>
