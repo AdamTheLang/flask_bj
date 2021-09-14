@@ -1,25 +1,34 @@
-<!-- templates/profile.html -->
-
 {% extends "base.html" %}
 
 {% block content %}
-    <p><font size="+4">Activist Organizations</font>
-    <p><font size="+2">Add/Edit</font></p><br>
+    <p><font size="+4">Activist Organizations (Add/Edit)</font>
     <form method="POST">
         {{ form.csrf_token }}
         {% from "_formhelpers.html" import render_field %}
         <fieldset>
-            <p class="tab10"><font size="+2">General Information</font></p>
+            <p><table><tr>
+                <td><font size="+2">General Information</font></td>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    {{ form.to_delete.label }}&nbsp;{{ form.to_delete()|safe }}
+                </td>
+            </tr></table></p>
             {{ render_field(form.org_name, size=40) }}
             {{ render_field(form.org_url, size=40) }}
             {{ render_field(form.social_media_url, size=40) }}
-            {{ render_field(form.state_obj) }}<br>
+            {{ render_field(form.state_obj) }}
             {{ render_field(form.issues, size=8) }}
             <p class="tab10"><font size="-1">
                 Select multiple: control-click (Windows)/command-click (Mac)
-            </font></p><br>
+            </font></p>
             {{ render_field(form.populations, size=8) }}<br>
-            {{ render_field(form.actions, rows=8, cols=79) }}
+            {{ render_field(form.actions, rows=6, cols=39) }}
             <br>
         </fieldset>
         <br>
@@ -28,8 +37,8 @@
             {{ render_field(form.bj_contact, size=40) }}
             {{ render_field(form.first_contact, placeholder="e.g. 03/02/2021") }}
             {{ render_field(form.latest_contact, placeholder="e.g. 03/02/2021") }}
-            {{ render_field(form.followup, rows=8, cols=79) }}
-            {{ render_field(form.notes, rows=8, cols=79) }}
+            {{ render_field(form.followup, rows=6, cols=39) }}
+            {{ render_field(form.notes, rows=6, cols=39) }}
             <br>
         </fieldset>
         <br>

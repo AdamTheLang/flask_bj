@@ -95,6 +95,7 @@ class OrganizationEditForm(FlaskForm):
 
     id = IntegerField()
     org_name = StringField('Organization Name', [validators.Length(min=4, max=40)])
+    to_delete = BooleanField('Mark for Deletion')
     org_url = StringField(
         'Organization URL',
         [

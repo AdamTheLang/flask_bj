@@ -13,12 +13,6 @@ def index():
     return render_template('index.html')
 
 
-@main.route('/profile')
-@login_required
-def profile():
-    return render_template('profile.html', name=current_user.name)
-
-
 @main.route('/edit_org/<org_id>', methods=['GET', 'POST'])
 @main.route('/edit_org/', methods=['GET', 'POST'])
 @main.route('/edit_org', methods=['GET', 'POST'])
