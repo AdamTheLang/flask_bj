@@ -58,7 +58,7 @@ class OrganizationSearchForm(FlaskForm):
             [('Any', 'Any'), ] + [(p.pop_key, p.pop_name) for p in pops]
         )
 
-    org_name = StringField('Org Name')
+    org_name = StringField('Organization Name')
 
     state = SelectField(
         label='State',
@@ -94,10 +94,10 @@ def _pop_query_factory():
 class OrganizationEditForm(FlaskForm):
 
     id = IntegerField()
-    org_name = StringField('Org Name', [validators.Length(min=4, max=40)])
+    org_name = StringField('Organization Name', [validators.Length(min=4, max=40)])
     to_delete = BooleanField('Marked for Deletion')
     org_url = StringField(
-        'Org URL',
+        'Organization URL',
         [
             validators.Optional(),
             validators.Length(max=200),
@@ -141,13 +141,13 @@ class OrganizationEditForm(FlaskForm):
     )
 
     first_contact = DateField(
-        label='First Contacted',
+        label='First Contact Date'
         format='%m/%d/%Y',
         validators=[validators.Optional()]
     )
 
     latest_contact = DateField(
-        label='Latest Contact',
+        label='Latest Contact Date'
         format='%m/%d/%Y',
         validators=[validators.Optional()]
     )
@@ -178,7 +178,7 @@ class OrganizationEditForm(FlaskForm):
     )
 
     contact_email = StringField(
-        label='Email Address',
+        label='Contact Email Address',
         validators=[
             validators.Optional(),
             validators.Length(max=50),
