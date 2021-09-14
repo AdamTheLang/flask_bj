@@ -6,20 +6,21 @@ from sqlalchemy.sql import func
 from project import db
 
 
+state_interests = db.Table(
+    'state_interests',
+    db.Column('volunteer_id', db.Integer, db.ForeignKey('volunteers.id')),
+    db.Column('state', db.String(2), db.ForeignKey('states.abbrev'))
+)
+
+
 class Volunteers(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.Text, unique=True)
     password = db.Column(db.Text)
     name = db.Column(db.Text)
+    bj_nym = db.Column(db.Text)
     phone = db.Column(db.BigInteger)
-
-
-class StateInterests(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    volunteer_id = db.Column(db.Integer, db.ForeignKey('volunteers.id'),
-                             nullable=False)
-    state = db.Column(db.String(2), db.ForeignKey('states.abbrev'),
-                      nullable=False)
+    states = db.relationship("States", secondary=state_interests)
 
 
 class Teams(db.Model):
@@ -120,6 +121,8 @@ class Groups(db.Model):
     contact_title = db.Column(db.Text)
     contact_phone = db.Column(db.BigInteger)
     contact_email = db.Column(db.Text)
+
+    to_delete = db.Column(db.Boolean)
 
 
 class Issues(db.Model):

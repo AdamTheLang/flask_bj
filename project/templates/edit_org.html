@@ -9,7 +9,15 @@
 
         {% from "_formhelpers.html" import render_field %}
         <fieldset>
-            <p><font size="+2">General Information</font></p>
+            <p><table><tr>
+                <td><font size="+2">General Information</font></td>
+                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    {{ form.to_delete.label }}&nbsp;{{ form.to_delete()|safe }}</td>
+            </tr></table></p>
             {{ render_field(form.org_name, size=80) }}
             {{ render_field(form.org_url, size=80) }}
             {{ render_field(form.social_media_url, size=80) }}
