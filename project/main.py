@@ -58,7 +58,7 @@ def find_org():
             models.Groups.populations.any(models.Populations.pop_key==form.population.data)
         )
     print(query)
-    results = list(query.all())
+    results = list(query.order_by(models.Groups.org_name).all())
 
     return render_template('find_org.html', form=form, results=results)
 
