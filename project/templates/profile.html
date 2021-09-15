@@ -1,39 +1,32 @@
-<!-- templates/profile.html -->
-
 {% extends "base.html" %}
 
 {% block content %}
-<div class="column is-4 is-offset-4">
-    <h3 class="title">Sign Up</h3>
-    <div class="box">
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <div class="notification is-danger">
-                {{ messages[0] }}. Go to <a href="{{ url_for('auth.login') }}">login page</a>.
-            </div>
-        {% endif %}
-        {% endwith %}
-        <form method="POST" action="/profile">
-            <div class="field">
-                <div class="control">
-                    <input class="input is-large" type="email" name="email" placeholder="Email" autofocus="">
-                </div>
-            </div>
-
-            <div class="field">
-                <div class="control">
-                    <input class="input is-large" type="text" name="name" placeholder="Name" autofocus="">
-                </div>
-            </div>
-
-            <div class="field">
-                <div class="control">
-                    <input class="input is-large" type="password" name="password" placeholder="Password">
-                </div>
-            </div>
-
-            <button class="button is-block is-info is-large is-fullwidth">Sign Up</button>
-        </form>
-    </div>
-</div>
+    <p><font size="+4">Edit User Profile</font></p>
+    <p><font size="-1">Note: If you change your password or email you will be logged out.</font></p>
+    <form method="POST">
+        {{ form.csrf_token }}
+        {% from "_formhelpers.html" import render_field %}
+        <fieldset>
+            <p></p>
+            {{ render_field(form.name, size=40) }}
+            {{ render_field(form.bj_nym, size=40) }}
+            {{ render_field(form.email, size=40) }}
+            <p class="tab10"><font size="-1">
+                To change email, you must input your current password below.
+            </font></p>
+            {{ render_field(form.states) }}
+            <p class="tab10"><font size="-1">
+                Select multiple: control-click (Windows)/command-click (Mac)
+            </font></p>
+        </fieldset>
+        <br>
+        <fieldset>
+            {{ render_field(form.old_password, size=40) }}
+            <br>
+            {{ render_field(form.new_password, size=40) }}
+            {{ render_field(form.confirm, size=40) }}
+            <br>
+        </fieldset>
+        <input type="submit" value="Save" style="width: 100px; height: 35px;">
+    </form>
 {% endblock %}
