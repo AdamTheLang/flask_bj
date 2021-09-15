@@ -33,14 +33,10 @@ def validate_old_password_field(form, field):
             print(current_user.password, field.data)
             return True
         raise validators.ValidationError("Incorrect existing password.")
-    print("Bork")
     if form.new_password.data and form.confirm.data == form.new_password.data:
         raise validators.ValidationError("Existing password required to change password.")
-    print("Borkbork")
-    print(current_user.email, form.email.data)
     if form.email.data and form.email.data != current_user.email:
         raise validators.ValidationError("Existing password required to change email.")
-    print("borkborkbork")
     return True
 
 
