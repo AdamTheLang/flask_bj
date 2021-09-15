@@ -1,11 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <p><font size="+4">Activist Organizations (Add/Edit)</font>
+    <p><font size="+4">Activist Organizations</font>
+    <p><font size="+2">Add/Edit</font>
     <form method="POST">
         {{ form.csrf_token }}
         {% from "_formhelpers.html" import render_field %}
-        <fieldset>
+        <br><fieldset>
             <p><table><tr>
                 <td><p class="tab10">
                 <font size="+2">General Information</font></p></td>
@@ -27,7 +28,7 @@
             {{ render_field(form.issues, size=8) }}
             <p class="tab10"><font size="-1">
                 Select multiple: control-click (Windows)/command-click (Mac)
-            </font></p>
+            </font></p><br>
             {{ render_field(form.populations, size=8) }}<br>
             {{ render_field(form.actions, rows=6, cols=39) }}
             <br>

@@ -2,7 +2,7 @@
 
 {% block content %}
     <p><font size="+4">Edit User Profile</font></p>
-    <p><font size="-1">Note: If you change your password or email you will be logged out.</font></p>
+    <p><font size="-1">Note: If you change your password or email you will be logged out.</font></p><br>
     <form method="POST">
         {{ form.csrf_token }}
         {% from "_formhelpers.html" import render_field %}
