@@ -130,6 +130,12 @@ def validate_not_empty_state(form, field):
     return True
 
 
+def validate_add_http(form, field):
+    if not field.data.startswith('http'):
+        field.data = "http://" + field.data
+    return True
+
+
 def _issue_query_factory():
     return models.Issues.query.order_by(models.Issues.issue_name).all()
 
@@ -147,6 +153,7 @@ class OrganizationEditForm(FlaskForm):
         'Organization URL',
         [
             validators.Optional(),
+            validate_add_http,
             validators.Length(max=200),
             validators.URL(message='Invalid URL')
         ]
@@ -189,13 +196,13 @@ class OrganizationEditForm(FlaskForm):
 
     first_contact = DateField(
         label='First Contact Date',
-        format='%m/%d/%Y',
+        format='%m/%d/%y',
         validators=[validators.Optional()]
     )
 
     latest_contact = DateField(
         label='Latest Contact Date',
-        format='%m/%d/%Y',
+        format='%m/%d/%y',
         validators=[validators.Optional()]
     )
 

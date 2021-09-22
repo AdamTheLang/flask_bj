@@ -24,6 +24,15 @@ def edit_org(org_id=None):
         if not org:
             abort(404)
         form = forms.OrganizationEditForm(obj=org)
+        if form.contact_phone.data and form.contact_phone.data.isdigit():
+            replacement = form.contact_phone.data
+            replacement.lstrip('1')
+            replacement = (
+                "(" + replacement[0:3] + ") " +
+                replacement[3:6] + "-" + replacement[6:]
+            )
+            form.contact_phone.data = replacement
+
     else:
         form = forms.OrganizationEditForm()
 
