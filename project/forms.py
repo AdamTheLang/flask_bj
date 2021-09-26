@@ -21,9 +21,10 @@ from project import models
 
 
 def validate_is_phone(form, field):
-    digits = ''.join(filter(str.isdigit, field.data))
-    if not (1999999999 < int(digits) < 19999999999):
+    phone_int = int(''.join(filter(str.isdigit, field.data)))
+    if not (1999999999 < phone_int < 19999999999):
         raise validators.ValidationError("Invalid telephone number.")
+    field.data = phone_int
     return True
 
 
@@ -110,6 +111,7 @@ class OrganizationSearchForm(FlaskForm):
         )
 
     org_name = StringField('Organization Name')
+    bj_contact = StringField('Balloon Juice Contact')
 
     state = SelectField(
         label='State',

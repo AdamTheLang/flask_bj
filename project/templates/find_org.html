@@ -26,6 +26,7 @@
         {% from "_formhelpers.html" import render_field %}
         <fieldset>
         {{ render_field(form.org_name, size=40) }}
+        {{ render_field(form.bj_contact, size=40) }}
         {{ render_field(form.state) }}
         {{ render_field(form.issue) }}
         {{ render_field(form.population) }}<br>

@@ -22,8 +22,8 @@
                 </td>
             </tr></table></p>
             {{ render_field(form.org_name, size=40) }}
-            {{ render_field(form.org_url, size=40) }}
-            {{ render_field(form.social_media_url, size=40) }}
+            {{ render_url_field(form.org_url, size=40) }}
+            {{ render_url_field(form.social_media_url, size=40) }}
             {{ render_field(form.state_obj) }}
             {{ render_field(form.issues, size=8) }}
             <p class="tab10"><font size="-1">
@@ -49,7 +49,7 @@
             {{ render_field(form.contact_name, size=40) }}
             {{ render_field(form.contact_title, size=40) }}
             {{ render_field(form.contact_phone, size=40) }}
-            {{ render_field(form.contact_email, size=40) }}
+            {{ render_email_field(form.contact_email, size=40) }}
             <br>
         </fieldset><br>
         <input type="submit" value="Save" style="width: 100px; height: 35px;">
