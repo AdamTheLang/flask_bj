@@ -32,8 +32,9 @@
             {{ render_field(form.populations, size=8) }}
             <p class="tab10"><font size="-1">
                 Select multiple: control-click (Windows)/command-click (Mac)
-            </font></p><br>            
+            </font></p><br>
             {{ render_field(form.actions, rows=6, cols=39) }}
+            {{ render_field(form.organization_notes, rows=6, cols=39) }}
             <br>
         </fieldset>
         <br>
@@ -43,7 +44,7 @@
             {{ render_field(form.first_contact, placeholder="e.g. 03/02/21") }}
             {{ render_field(form.latest_contact, placeholder="e.g. 03/02/21") }}
             {{ render_field(form.followup, rows=6, cols=39) }}
-            {{ render_field(form.notes, rows=6, cols=39) }}
+            {{ render_field(form.interaction_notes, rows=6, cols=39) }}
             <br>
         </fieldset>
         <br>
@@ -53,6 +54,7 @@
             {{ render_field(form.contact_title, size=40) }}
             {{ render_field(form.contact_phone, size=40) }}
             {{ render_field(form.contact_email, size=40) }}
+            {{ render_field(form.contact_notes, rows=6, cols=39) }}
             <br>
         </fieldset><br>
         <input type="submit" value="Save" style="width: 100px; height: 35px;">
