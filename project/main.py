@@ -24,14 +24,14 @@ def edit_org(org_id=None):
         if not org:
             abort(404)
         form = forms.OrganizationEditForm(obj=org)
-        if form.contact_phone.data and form.contact_phone.data.isdigit():
-            replacement = form.contact_phone.data
-            replacement.lstrip('1')
-            replacement = (
-                "(" + replacement[0:3] + ") " +
-                replacement[3:6] + "-" + replacement[6:]
+        formatted_phone = str(form.contact_phone.data)
+        if formatted_phone and formatted_phone.isdigit():
+            formatted_phone.lstrip('1')
+            formatted_phone = (
+                "(" + formatted_phone[0:3] + ") " +
+                formatted_phone[3:6] + "-" + formatted_phone[6:]
             )
-            form.contact_phone.data = replacement
+            form.contact_phone.data = formatted_phone
 
     else:
         form = forms.OrganizationEditForm()
@@ -57,6 +57,10 @@ def find_org():
     if form.org_name.data:
         query = query.filter(
             models.Groups.org_name.like('%' + form.org_name.data + '%')
+        )
+    if form.bj_contact.data:
+        query = query.filter(
+            models.Groups.bj_contact.like('%' + form.bj_contact.data + '%')
         )
     if form.state.data and form.state.data != 'Any':
         query = query.filter_by(state=form.state.data)

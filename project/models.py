@@ -116,11 +116,15 @@ class Groups(db.Model):
     first_contact = db.Column(db.Date)
     latest_contact = db.Column(db.Date)
     followup = db.Column(db.Text)
-    notes = db.Column(db.Text)
+    organization_notes = db.Column(db.Text)
+
+    interaction_notes = db.Column(db.Text)
+
     contact_name = db.Column(db.Text)
     contact_title = db.Column(db.Text)
     contact_phone = db.Column(db.BigInteger)
     contact_email = db.Column(db.Text)
+    contact_notes = db.Column(db.Text)
 
     to_delete = db.Column(db.Boolean)
 

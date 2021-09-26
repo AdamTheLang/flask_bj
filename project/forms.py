@@ -188,7 +188,12 @@ class OrganizationEditForm(FlaskForm):
 
     actions = TextAreaField(
         label='Typical Actions',
-        validators=[validators.Length(max=1200)],
+        validators=[validators.Length(max=1200)]
+    )
+
+    organization_notes = TextAreaField(
+        label = 'Organization Notes',
+        validators=[validators.Length(max=1200)]
     )
 
     bj_contact = StringField(
@@ -213,8 +218,8 @@ class OrganizationEditForm(FlaskForm):
         validators=[validators.Length(max=1200)]
     )
 
-    notes = TextAreaField(
-        label='Other Notes',
+    interaction_notes = TextAreaField(
+        label='BJ Interaction Notes',
         validators=[validators.Length(max=1200)]
     )
 
@@ -240,4 +245,9 @@ class OrganizationEditForm(FlaskForm):
             validators.Length(max=50),
             validators.Email(),
         ]
+    )
+
+    contact_notes = TextAreaField(
+        label='Contact Notes',
+        validators=[validators.Length(max=1200)]
     )
