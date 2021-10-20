@@ -93,7 +93,7 @@ def threats(threat_id=None):
         this_threat = [
             threat for threat in all_threats if int(threat.id) == int(threat_id)
         ][0]
-        form = forms.ThreatForm(this_threat)
+        form = forms.ThreatForm(obj=this_threat)
     else:
         this_threat = None
         form = forms.ThreatForm()
