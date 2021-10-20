@@ -45,11 +45,6 @@
                                         </a>
                                     </td>
                                     <td>
-                                        <a href="{{ url_for('auth.signup') }}" class="navbar-item">
-                                            New User
-                                        </a>
-                                    </td>
-                                    <td>
                                         <a href="/edit_org" class="navbar-item">
                                             New Organization
                                         </a>
@@ -59,16 +54,29 @@
                                             Find Organization
                                         </a>
                                     </td>
-                                    <td>
-                                        <a href="{{ url_for('auth.logout') }}" class="navbar-item">
-                                            Logout
-                                        </a>
-                                    </td>
+                                    {% if current_user.admin %}
+                                        <td>
+                                            <a href="{{ url_for('auth.signup') }}" class="navbar-item">
+                                                New User
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="/threats" class="navbar-item">
+                                                Threats
+                                            </a>
+                                        </td>
+                                    {% endif %}
                                 {% endif %}
                                 {% if not current_user.is_authenticated %}
                                     <td>
                                         <a href="{{ url_for('auth.login') }}" class="navbar-item">
                                             Login
+                                        </a>
+                                    </td>
+                                {% else %}
+                                    <td>
+                                        <a href="{{ url_for('auth.logout') }}" class="navbar-item">
+                                            Logout
                                         </a>
                                     </td>
                                 {% endif %}

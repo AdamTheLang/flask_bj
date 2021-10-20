@@ -65,13 +65,45 @@ def find_org():
     if form.state.data and form.state.data != 'Any':
         query = query.filter_by(state=form.state.data)
     if form.issue.data and form.issue.data != 'Any':
-        query = query.filter(models.Groups.issues.any(models.Issues.issue_key==form.issue.data))
-    if form.population.data and form.population.data != 'Any':
         query = query.filter(
-            models.Groups.populations.any(models.Populations.pop_key==form.population.data)
+            models.Groups.issues.any(models.Issues.issue_key == form.issue.data)
         )
-    print(query)
+    if form.population.data and form.population.data != 'Any':
+        query = query.filter(models.Groups.populations.any(
+            models.Populations.pop_key == form.population.data
+        ))
+
     results = list(query.order_by(models.Groups.org_name).all())
 
     return render_template('find_org.html', form=form, results=results)
 
+
+@main.route('/threats/<threat_id>', methods=['GET', 'POST'])
+@main.route('/threats/', methods=['GET', 'POST'])
+@main.route('/threats', methods=['GET', 'POST'])
+@login_required
+def threats(threat_id=None):
+    if not current_user.admin:
+        abort(401)
+
+    all_threats = list(
+        models.Threats.query.order_by(models.Threats.threat_key).all()
+    )
+    if threat_id is not None:
+        this_threat = [
+            threat for threat in all_threats if threat.id == threat_id
+        ][0]
+        form = forms.ThreatForm(this_threat)
+    else:
+        this_threat = None
+        form = forms.ThreatForm()
+
+    if form.validate_on_submit():
+        if this_threat is None:
+            threat = models.Threats()
+        form.populate_obj(threat)
+        db.session.add(threat)
+        db.session.commit()
+        return redirect('/threats')
+
+    return render_template('threats.html', form=form, all_threats=all_threats)

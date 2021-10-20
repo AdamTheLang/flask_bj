@@ -1,0 +1,4 @@
+{% macro threat_list_item(threat) %}
+    <tr><td><a href="/threats/{{ threat.id }}">
+    {{ threat.threat_key }}</a></td><td></td><td>{{ threat.name }}</td></tr>
+{% endmacro %}

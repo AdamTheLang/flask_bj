@@ -42,6 +42,9 @@ def signup():
 @login_required
 def signup_post():
 
+    if not current_user.admin:
+        abort(401)
+
     email = request.form.get('email')
     name = request.form.get('name')
     password = request.form.get('password')

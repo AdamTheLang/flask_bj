@@ -21,6 +21,7 @@ class Volunteers(UserMixin, db.Model):
     bj_nym = db.Column(db.Text)
     phone = db.Column(db.BigInteger)
     states = db.relationship("States", secondary=state_interests)
+    admin = db.Column(db.Boolean)
 
 
 class Teams(db.Model):
@@ -171,3 +172,12 @@ class Actions(db.Model):
     closed = db.Column(db.Boolean)
     # does this need a team id or is it enough that the engagement has one?
     # does this need group ids or is it enough that the engagement has one?
+
+
+class Threats(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    threat_key = db.Column(db.Text)
+    name = db.Column(db.Text)
+    source = db.Column(db.Text)
+    does = db.Column(db.Text)
+    matters = db.Column(db.Text)

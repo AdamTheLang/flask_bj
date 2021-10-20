@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <p><font size="+4">Threats</font>
+    {% if all_threats %}
+        <table>
+            <tr><th>Threat ID</th>
+            <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+            <th>Threat Name</th></tr>
+            {% from "_threat_result.html" import threat_list_item %}
+            <style>
+                a {
+                    text-decoration: underline;
+                }
+                a:hover {
+                    text-decoration: none;
+                }
+            </style>
+            {% for threat in all_threats %}
+                {{ threat_list_item(threat) }}
+            {% endfor %}
+        </table>
+    {% else %}
+        <p><font size="+2">No results.</font></p>
+    {% endif %}
+    <br><br>
+    <p><font size="+2">Add/Edit</font>
+    <form method="POST">
+        {{ form.csrf_token }}
+        {% from "_formhelpers.html" import render_field %}
+        <br>
+            {{ render_field(form.threat_key, size=40) }}
+            {{ render_field(form.name, size=40) }}
+            {{ render_field(form.source, size=40) }}
+            {{ render_field(form.does, rows=6, cols=39) }}
+            {{ render_field(form.matters, rows=6, cols=39) }}
+        <br>
+        <input type="submit" disabled style="display: none" aria-hidden="true" />
+        <input type="submit" value="Save" style="width: 100px; height: 35px;">
+    </form>
+{% endblock %}

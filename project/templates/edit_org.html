@@ -27,11 +27,11 @@
             {{ render_url_field(form.org_url, size=40) }}
             {{ render_url_field(form.social_media_url, size=40) }}
             {{ render_field(form.state_obj) }}
-            {{ render_field(form.issues, size=8) }}
+            {{ render_field(form.issues, size=18) }}
             <p class="tab10"><font size="-1">
                 Select multiple: control-click (Windows)/command-click (Mac)
             </font></p><br>
-            {{ render_field(form.populations, size=8) }}
+            {{ render_field(form.populations, size=12) }}
             <p class="tab10"><font size="-1">
                 Select multiple: control-click (Windows)/command-click (Mac)
             </font></p><br>
@@ -59,6 +59,7 @@
             {{ render_field(form.contact_notes, rows=6, cols=39) }}
             <br>
         </fieldset><br>
+        <input type="submit" disabled style="display: none" aria-hidden="true" />
         <input type="submit" value="Save" style="width: 100px; height: 35px;">
     </form>
 {% endblock %}

@@ -251,3 +251,20 @@ class OrganizationEditForm(FlaskForm):
         label='Contact Notes',
         validators=[validators.Length(max=1200)]
     )
+
+
+class ThreatForm(FlaskForm):
+
+    threat_key = StringField(
+        'Threat ID',
+        [validators.Length(min=2), validators.Length(max=20)]
+    )
+
+    name = StringField(
+        'Threat Name',
+        [validators.Length(min=2), validators.Length(max=20)]
+    )
+
+    source = StringField('Source', [validators.Length(max=200)])
+    does = TextAreaField('What It Does', [validators.Length(max=1200)])
+    matters = TextAreaField('Why It Matters', [validators.Length(max=1200)])
