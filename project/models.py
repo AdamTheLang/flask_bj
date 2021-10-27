@@ -38,6 +38,11 @@ class TeamVolunteers(db.Model):
     team_id = db.Column(db.String(2), db.ForeignKey('teams.id'),
                         nullable=False)
 
+state_threats = db.Table(
+    'state_threats',
+    db.Column('threat_id', db.Integer, db.ForeignKey('threats.id')),
+    db.Column('state_key', db.String(2), db.ForeignKey('states.abbrev'))
+)
 
 class States(db.Model):
     def __str__(self):
@@ -45,11 +50,16 @@ class States(db.Model):
 
     abbrev = db.Column(db.String(2), primary_key=True)
     name = db.Column(db.Text)
+    threat_rating = db.Column(db.Integer)
+    republican_strategy = db.Column(db.Text)
+    our_strategy = db.Column(db.Text)
+
     government_desc = db.Column(db.Text)
-    leg_period = db.Column(db.Text)
+    lege_desc = db.Column(db.Text)
     supreme_court = db.Column(db.Text)
     redistricting = db.Column(db.Text)
-    state_teams = db.relationship('Teams', backref='state')
+
+    state_threats = db.relationship("Threats", secondary=state_threats)
 
 
 class Legislation(db.Model):
@@ -175,6 +185,9 @@ class Actions(db.Model):
 
 
 class Threats(db.Model):
+    def __str__(self):
+        return self.name
+
     id = db.Column(db.Integer, primary_key=True)
     threat_key = db.Column(db.Text)
     name = db.Column(db.Text)

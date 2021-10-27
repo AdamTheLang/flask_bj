@@ -52,6 +52,10 @@ def _state_query_factory_just_states():
     )
 
 
+def _threat_query_factory():
+    return models.Threats.query.order_by(models.Threats.name).all()
+
+
 class ProfileForm(FlaskForm):
     name = StringField('Name', [
         validators.Optional(),
@@ -268,3 +272,47 @@ class ThreatForm(FlaskForm):
     source = StringField('Source', [validators.Length(max=200)])
     does = TextAreaField('What It Does', [validators.Length(max=1200)])
     matters = TextAreaField('Why It Matters', [validators.Length(max=1200)])
+
+
+class StateForm(FlaskForm):
+
+    name = StringField('State Name', [validators.Length(min=3),
+                                      validators.Length(max=25)])
+    threat_rating = SelectField(
+        label='Threat Level', choices=[(x, str(x)) for x in range(1, 11)]
+    )
+
+    republican_strategy = TextAreaField(
+        label='Republican Strategy',
+        validators=[validators.Length(max=1200)]
+    )
+
+    our_strategy = TextAreaField(
+        label='Our Strategy',
+        validators=[validators.Length(max=1200)]
+    )
+
+    government_desc = TextAreaField(
+        label='Government Details',
+        validators=[validators.Length(max=1200)]
+    )
+
+    lege_desc = TextAreaField(
+        label='Legislature Info',
+        validators=[validators.Length(max=1200)]
+    )
+
+    supreme_court = TextAreaField(
+        label='State Supreme Court Info',
+        validators=[validators.Length(max=1200)]
+    )
+
+    redistricting = TextAreaField(
+        label='Redistricting Method/Info',
+        validators=[validators.Length(max=1200)]
+    )
+
+    state_threats = QuerySelectMultipleField(
+        label='',
+        query_factory=_threat_query_factory
+    )

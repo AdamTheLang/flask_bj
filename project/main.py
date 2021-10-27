@@ -107,3 +107,35 @@ def threats(threat_id=None):
         return redirect('/threats')
 
     return render_template('threats.html', form=form, all_threats=all_threats)
+
+
+@main.route('/edit_state/<abbrev>', methods=['GET', 'POST'])
+@main.route('/edit_state/', methods=['GET'])
+@main.route('/edit_state', methods=['GET'])
+@login_required
+def states(abbrev=None):
+    if request.method == 'POST' and not current_user.admin:
+        abort(401)
+
+    all_states = list(models.States.query.order_by(models.States.name).all())
+    all_abbrevs = [st.abbrev for st in all_states]
+    if abbrev is not None and abbrev not in all_abbrevs:
+        abort(404)
+
+    if request.method == 'POST' and abbrev is None:
+        abort(404)
+
+    if abbrev is None:
+        form = forms.StateForm()
+    else:
+        this_state = [s for s in all_states if abbrev == s.abbrev][0]
+        form = forms.StateForm(obj=this_state)
+
+    if form.validate_on_submit():
+        form.populate_obj(this_state)
+        db.session.add(this_state)
+        db.session.commit()
+        return redirect('/edit_state')
+
+    return render_template('edit_state.html', form=form, abbrev=abbrev)
+
