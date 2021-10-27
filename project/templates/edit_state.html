@@ -74,13 +74,17 @@
     <form method="POST" name="edit_state">
         {{ form.csrf_token }}
         {% from "_formhelpers.html" import render_field %}
-        <br><fieldset>
+        <br>
+        <fieldset>
             <p class="tab10"><font size="+2">General Information</font></p>
             {{ render_field(form.name, size=40) }}
             {{ render_field(form.threat_rating) }}
             {{ render_field(form.republican_strategy, rows=6, cols=39) }}
             {{ render_field(form.our_strategy, rows=6, cols=39) }}
             <br>
+        </fieldset>
+        <fieldset>
+            <p class="tab10"><font size="+2">Government Information</font></p>
             {{ render_field(form.government_desc, rows=6, cols=39) }}
             {{ render_field(form.lege_desc, rows=6, cols=39) }}
             {{ render_field(form.supreme_court, rows=6, cols=39) }}
