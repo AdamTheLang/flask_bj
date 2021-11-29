@@ -73,40 +73,77 @@
 
     <form method="POST" name="edit_state">
         {{ form.csrf_token }}
-        {% from "_formhelpers.html" import render_field %}
+        {% if current_user.admin %}
+            {% from "_formhelpers.html" import render_field %}
+        {% else %}
+            {% from "_displayhelpers.html" import render_field %}
+        {% endif %}
         <br>
         <fieldset>
-            <p class="tab10"><font size="+2">General Information</font></p>
-            {{ render_field(form.name, size=40) }}
-            {{ render_field(form.threat_rating) }}
+            <table style="width:100%"><tr>
+                <th>{{ render_field(form.name, size=40) }}</th>
+                <th>{{ render_field(form.threat_rating) }}</th>
+            </tr></table>
+            <br>
+        </fieldset>
+        <fieldset>
+            <p class="tab10"><font size="+2">Strategy</font></p>
             {{ render_field(form.republican_strategy, rows=6, cols=39) }}
             {{ render_field(form.our_strategy, rows=6, cols=39) }}
             <br>
         </fieldset>
         <br>
         <fieldset>
-            <p class="tab10"><font size="+2">Government Information</font></p>
-            {{ render_field(form.government_desc, rows=6, cols=39) }}
+            <p class="tab10"><font size="+2">State of the State</font></p>
             {{ render_field(form.lege_desc, rows=6, cols=39) }}
+            {{ render_field(form.lege_term, rows=6, cols=39) }}
+            {{ render_field(form.state_officials, rows=6, cols=39) }}
             {{ render_field(form.supreme_court, rows=6, cols=39) }}
+            {{ render_field(form.national_officials, rows=6, cols=39) }}
             {{ render_field(form.redistricting, rows=6, cols=39) }}
-            {{ render_field(form.government_desc, rows=6, cols=39) }}
             <br>
         </fieldset>
         <br>
+        {% from "_formhelpers.html" import render_line_of_checkboxes_with_label %}
         <fieldset>
-            <p class="tab10"><font size="+2">Threats</font></p>
-            {{ render_field(form.state_threats, size=24) }}
-            <p class="tab10"><font size="-1">
-                Select multiple: control-click (Windows)/command-click (Mac)
-            </font></p><br>
-            <br>
+            <p class="tab10"><font size="+2">Election Subversion/Politicization Threats</font></p>
+            <div class="tab10"><table style="width:100%">
+                <tr>
+                    <th><font size="-1">Threat<br>Present&nbsp;&nbsp;&nbsp;&nbsp;</font></th>
+                    <th><font size="-1">Litigation<br>Response</font></th>
+                    <th><font size="-1">DOJ<br>Response</font></th>
+                    <th><font size="-1">Counter-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Threat Name<br>Organizing</font></th>
+                </font></tr>
+                <tr>
+                    <td>{{ render_field(form.election_state_threats)}} </td>
+                    <td>{{ render_field(form.election_threat_litigation) }}</td>
+                    <td>{{ render_field(form.election_threat_doj) }}</td>
+                    <td>{{ render_field(form.election_threat_organizing) }}</td>
+                </tr>
+            </table></div>
+        <br>
         </fieldset>
-        <input type="submit" disabled style="display: none" aria-hidden="true" />
+        <fieldset>
+            <p class="tab10"><font size="+2">Anti-Voter/Voter Discouragement Threats</font></p>
+            <div class="tab10"><table style="width:100%">
+                <tr>
+                    <th><font size="-1">Threat<br>Present&nbsp;&nbsp;&nbsp;&nbsp;</font></th>
+                    <th><font size="-1">Litigation<br>Response</font></th>
+                    <th><font size="-1">DOJ<br>Response</font></th>
+                    <th><font size="-1">Counter-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Threat Name<br>Organizing</font></th>
+                </tr>
+                <tr>
+                    <td>{{ render_field(form.antivoter_state_threats) }}</td>
+                    <td>{{ render_field(form.antivoter_threat_litigation) }}</td>
+                    <td>{{ render_field(form.antivoter_threat_doj) }}</td>
+                    <td>{{ render_field(form.antivoter_threat_organizing) }}</td>
+                </tr>
+            </table></div>
+        <br>
+        </fieldset>
         {% if current_user.admin and abbrev %}
+            <input type="submit" disabled style="display: none" aria-hidden="true" />
             <input type="submit" value="Save" style="width: 100px; height: 35px;">
-        {% else %}
-            <input type="submit" disabled value="Save" style="width: 100px; height: 35px;">
         {% endif %}
 
     </form>

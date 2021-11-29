@@ -44,3 +44,46 @@
   {% endif %}
   </dd>
 {% endmacro %}
+
+{% macro render_multiple_lists_as_checkboxes_with_label(list1, list2, list3, list4, labels) %}
+    {% for choice in labels %}
+        <tr>
+            <td>
+                {{ list1[loop.index0](**kwargs) }}
+            </td>
+            <td>
+                {{ list2[loop.index0](**kwargs) }}
+            </td>
+            <td>
+                {{ list3[loop.index0](**kwargs) }}
+            </td>
+            <td>
+                {{ list4[loop.index0](**kwargs) }}
+            </td>
+            <td>
+                {{ choice.label }}
+            </td>
+        </tr>
+    {% endfor %}
+{% endmacro %}
+
+
+{% macro render_line_of_checkboxes_with_label(box1, box2, box3, box4, label) %}
+    <tr>
+        <td>
+            {{ box1(**kwargs) }}
+        </td>
+        <td>
+            {{ box2(**kwargs) }}
+        </td>
+        <td>
+            {{ box3(**kwargs) }}
+        </td>
+        <td>
+            {{ box4(**kwargs) }}
+        </td>
+        <td>
+            {{ label.label }}
+        </td>
+    </tr>
+{% endmacro %}

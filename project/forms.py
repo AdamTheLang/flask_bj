@@ -8,7 +8,7 @@ from wtforms.fields import (
     StringField,
     TextAreaField,
 )
-from wtforms import validators
+from wtforms import validators, widgets
 from wtforms.ext.sqlalchemy.fields import (
     QuerySelectField,
     QuerySelectMultipleField
@@ -18,6 +18,11 @@ from flask_wtf import FlaskForm
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from project import models
+
+
+class MultiCheckboxField(SelectMultipleField):
+    widget = widgets.ListWidget(prefix_label=False)
+    option_widget = widgets.CheckboxInput()
 
 
 def validate_is_phone(form, field):
@@ -52,8 +57,31 @@ def _state_query_factory_just_states():
     )
 
 
-def _threat_query_factory():
-    return models.Threats.query.order_by(models.Threats.name).all()
+def _nameless_threat_query_factory():
+    threats = list(models.Threats.query.order_by(models.Threats.threat_key).all())
+    for nt in threats:
+        nt.__str__ = lambda x: " "
+        nt.__repr__ = lambda x: " "
+    print('_nameless_threat_query_factory: %s' % (len(threats),))
+    return threats
+
+
+def _election_threat_query_factory():
+    threats = list(models.Threats.query.filter(
+        models.Threats.threat_key < 200
+    ).order_by(models.Threats.threat_key).all())
+    print('_election_threat_query_factory: %s' % (len(threats),))
+
+    return threats
+
+
+def _antivoter_threat_query_factory():
+    threats = list(models.Threats.query.filter(
+        models.Threats.threat_key >= 200
+    ).order_by(models.Threats.threat_key).all())
+    print('_antivoter_threat_query_factory: %s' % (len(threats),))
+
+    return threats
 
 
 class ProfileForm(FlaskForm):
@@ -256,6 +284,11 @@ class OrganizationEditForm(FlaskForm):
         validators=[validators.Length(max=1200)]
     )
 
+    threat_response = TextAreaField(
+        label='Responding to Primary Threats',
+        validators=[validators.Length(max=1200)]
+    )
+
 
 class ThreatForm(FlaskForm):
 
@@ -292,27 +325,64 @@ class StateForm(FlaskForm):
         validators=[validators.Length(max=1200)]
     )
 
-    government_desc = TextAreaField(
-        label='Government Details',
+    state_officials = TextAreaField(
+        label='State Elected Officials',
+        validators=[validators.Length(max=1200)]
+    )
+
+    national_officials = TextAreaField(
+        label='US Representatives & Senators',
         validators=[validators.Length(max=1200)]
     )
 
     lege_desc = TextAreaField(
-        label='Legislature Info',
+        label='State Legislature',
+        validators=[validators.Length(max=1200)]
+    )
+
+    lege_term = TextAreaField(
+        label='State Legislative Term',
         validators=[validators.Length(max=1200)]
     )
 
     supreme_court = TextAreaField(
-        label='State Supreme Court Info',
+        label='State Supreme Court',
         validators=[validators.Length(max=1200)]
     )
 
     redistricting = TextAreaField(
         label='Redistricting Method/Info',
-        validators=[validators.Length(max=1200)]
+        validators=[validators.Length(max=2000)]
     )
 
-    state_threats = QuerySelectMultipleField(
-        label='',
-        query_factory=_threat_query_factory
+    election_state_threats = MultiCheckboxField(
+        label='', choices=[], coerce=int
+    )
+
+    election_threat_litigation = MultiCheckboxField(
+        label='', choices=[], coerce=int
+    )
+
+    election_threat_doj = MultiCheckboxField(
+        label='', choices=[], coerce=int
+    )
+
+    election_threat_organizing = MultiCheckboxField(
+        label='', choices=[], coerce=int
+    )
+
+    antivoter_state_threats = MultiCheckboxField(
+        label='', choices=[], coerce=int
+    )
+
+    antivoter_threat_litigation = MultiCheckboxField(
+        label='', choices=[], coerce=int
+    )
+
+    antivoter_threat_doj = MultiCheckboxField(
+        label='', choices=[], coerce=int
+    )
+
+    antivoter_threat_organizing = MultiCheckboxField(
+        label='', choices=[], coerce=int
     )

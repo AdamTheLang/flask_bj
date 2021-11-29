@@ -38,11 +38,34 @@ class TeamVolunteers(db.Model):
     team_id = db.Column(db.String(2), db.ForeignKey('teams.id'),
                         nullable=False)
 
+
 state_threats = db.Table(
     'state_threats',
     db.Column('threat_id', db.Integer, db.ForeignKey('threats.id')),
     db.Column('state_key', db.String(2), db.ForeignKey('states.abbrev'))
 )
+
+
+state_litigations = db.Table(
+    'state_litigations',
+    db.Column('threat_id', db.Integer, db.ForeignKey('threats.id')),
+    db.Column('state_key', db.String(2), db.ForeignKey('states.abbrev'))
+)
+
+
+state_dojs = db.Table(
+    'state_dojs',
+    db.Column('threat_id', db.Integer, db.ForeignKey('threats.id')),
+    db.Column('state_key', db.String(2), db.ForeignKey('states.abbrev'))
+)
+
+
+state_threat_orgs = db.Table(
+    'state_threat_orgs',
+    db.Column('threat_id', db.Integer, db.ForeignKey('threats.id')),
+    db.Column('state_key', db.String(2), db.ForeignKey('states.abbrev'))
+)
+
 
 class States(db.Model):
     def __str__(self):
@@ -56,10 +79,16 @@ class States(db.Model):
 
     government_desc = db.Column(db.Text)
     lege_desc = db.Column(db.Text)
+    lege_term = db.Column(db.Text)
     supreme_court = db.Column(db.Text)
     redistricting = db.Column(db.Text)
+    state_officials = db.Column(db.Text)
+    national_officials = db.Column(db.Text)
 
     state_threats = db.relationship("Threats", secondary=state_threats)
+    threat_litigation = db.relationship("Threats", secondary=state_litigations)
+    threat_doj = db.relationship("Threats", secondary=state_dojs)
+    threat_organizing = db.relationship("Threats", secondary=state_threat_orgs)
 
 
 class Legislation(db.Model):
@@ -128,6 +157,7 @@ class Groups(db.Model):
     latest_contact = db.Column(db.Date)
     followup = db.Column(db.Text)
     organization_notes = db.Column(db.Text)
+    threat_response = db.Column(db.Text)
 
     interaction_notes = db.Column(db.Text)
 
