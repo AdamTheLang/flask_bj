@@ -150,7 +150,7 @@ class OrganizationSearchForm(FlaskForm):
     )
 
     issue = SelectField(
-        label='Primary Issues',
+        label='Action Issues',
     )
 
     population = SelectField(
