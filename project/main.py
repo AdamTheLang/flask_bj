@@ -83,7 +83,7 @@ def find_org():
 @main.route('/threats', methods=['GET', 'POST'])
 @login_required
 def threats(threat_id=None):
-    if not current_user.admin:
+    if not current_user.admin and request.method == 'POST':
         abort(401)
 
     all_threats = list(

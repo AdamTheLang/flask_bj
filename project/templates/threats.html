@@ -27,7 +27,11 @@
     <p><font size="+2">Add/Edit</font>
     <form method="POST">
         {{ form.csrf_token }}
-        {% from "_formhelpers.html" import render_field %}
+        {% if current_user.admin %}
+            {% from "_formhelpers.html" import render_field %}
+        {% else %}
+            {% from "_displayhelpers.html" import render_field %}
+        {% endif %}
         <br>
             {{ render_field(form.threat_key, size=40) }}
             {{ render_field(form.name, size=40) }}
@@ -36,6 +40,8 @@
             {{ render_field(form.matters, rows=6, cols=39) }}
         <br>
         <input type="submit" disabled style="display: none" aria-hidden="true" />
-        <input type="submit" value="Save" style="width: 100px; height: 35px;">
+        {% if current_user.admin %}
+            <input type="submit" value="Save" style="width: 100px; height: 35px;">
+        {% endif %}
     </form>
 {% endblock %}

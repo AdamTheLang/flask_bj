@@ -63,15 +63,15 @@
                                             State Info
                                         </a>
                                     </td>
+                                    <td>
+                                        <a href="/threats" class="navbar-item">
+                                            Threats
+                                        </a>
+                                    </td>
                                     {% if current_user.admin %}
                                         <td>
                                             <a href="{{ url_for('auth.signup') }}" class="navbar-item">
                                                 New User
-                                            </a>
-                                        </td>
-                                        <td>
-                                            <a href="/threats" class="navbar-item">
-                                                Threats
                                             </a>
                                         </td>
                                     {% endif %}
