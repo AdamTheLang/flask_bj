@@ -220,12 +220,12 @@ class OrganizationEditForm(FlaskForm):
 
     actions = TextAreaField(
         label='Typical Actions',
-        validators=[validators.Length(max=1200)]
+        validators=[validators.Length(max=5000)]
     )
 
     organization_notes = TextAreaField(
         label = 'Organization Notes',
-        validators=[validators.Length(max=1200)]
+        validators=[validators.Length(max=5000)]
     )
 
     bj_contact = StringField(
@@ -247,12 +247,12 @@ class OrganizationEditForm(FlaskForm):
 
     followup = TextAreaField(
         label='Followup Actions',
-        validators=[validators.Length(max=1200)]
+        validators=[validators.Length(max=5000)]
     )
 
     interaction_notes = TextAreaField(
         label='BJ Interaction Notes',
-        validators=[validators.Length(max=1200)]
+        validators=[validators.Length(max=5000)]
     )
 
     contact_name = StringField(
@@ -281,12 +281,12 @@ class OrganizationEditForm(FlaskForm):
 
     contact_notes = TextAreaField(
         label='Contact Notes',
-        validators=[validators.Length(max=1200)]
+        validators=[validators.Length(max=5000)]
     )
 
     threat_response = TextAreaField(
         label='Responding to Primary Threats',
-        validators=[validators.Length(max=1200)]
+        validators=[validators.Length(max=5000)]
     )
 
 
@@ -303,8 +303,8 @@ class ThreatForm(FlaskForm):
     )
 
     source = StringField('Source', [validators.Length(max=200)])
-    does = TextAreaField('What It Does', [validators.Length(max=1200)])
-    matters = TextAreaField('Why It Matters', [validators.Length(max=1200)])
+    does = TextAreaField('What It Does', [validators.Length(max=5000)])
+    matters = TextAreaField('Why It Matters', [validators.Length(max=5000)])
 
 
 class StateForm(FlaskForm):
@@ -317,42 +317,42 @@ class StateForm(FlaskForm):
 
     republican_strategy = TextAreaField(
         label='Republican Strategy',
-        validators=[validators.Length(max=1200)]
+        validators=[validators.Length(max=5000)]
     )
 
     our_strategy = TextAreaField(
         label='Our Strategy',
-        validators=[validators.Length(max=1200)]
+        validators=[validators.Length(max=5000)]
     )
 
     state_officials = TextAreaField(
         label='State Elected Officials',
-        validators=[validators.Length(max=1200)]
+        validators=[validators.Length(max=5000)]
     )
 
     national_officials = TextAreaField(
         label='US Representatives & Senators',
-        validators=[validators.Length(max=1200)]
+        validators=[validators.Length(max=5000)]
     )
 
     lege_desc = TextAreaField(
         label='State Legislature',
-        validators=[validators.Length(max=1200)]
+        validators=[validators.Length(max=5000)]
     )
 
     lege_term = TextAreaField(
         label='State Legislative Term',
-        validators=[validators.Length(max=1200)]
+        validators=[validators.Length(max=5000)]
     )
 
     supreme_court = TextAreaField(
         label='State Supreme Court',
-        validators=[validators.Length(max=1200)]
+        validators=[validators.Length(max=5000)]
     )
 
     redistricting = TextAreaField(
         label='Redistricting Method/Info',
-        validators=[validators.Length(max=2000)]
+        validators=[validators.Length(max=5000)]
     )
 
     election_state_threats = MultiCheckboxField(
