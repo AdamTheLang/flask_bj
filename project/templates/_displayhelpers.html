@@ -1,6 +1,5 @@
 {% macro render_field(field, rows=0, cols=0, size=0) %}
   <dt><p class="tab10"><bold><font size="+1">{{ field.label }}</font></bold></p></dt>
-  <dd><p class="tab10">{{ field.data }}</p></dd>
+  <dd><p class="tab10" style="white-space: pre;">{{ field.data }}</p></dd>
   <br>
 {% endmacro %}
-
