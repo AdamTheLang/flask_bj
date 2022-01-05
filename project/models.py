@@ -1,7 +1,6 @@
 # models.py
 
 from flask_login import UserMixin
-from sqlalchemy.sql import func
 
 from project import db
 
@@ -89,6 +88,78 @@ class States(db.Model):
     threat_litigation = db.relationship("Threats", secondary=state_litigations)
     threat_doj = db.relationship("Threats", secondary=state_dojs)
     threat_organizing = db.relationship("Threats", secondary=state_threat_orgs)
+
+    @property
+    def election_state_threats(self):
+        return [t for t in self.state_threats if int(t.threat_key) < 200]
+
+    @election_state_threats.setter
+    def election_state_threats(self, threats):
+        assert all(int(t.id) < 200 for t in threats)
+        self.state_threats = self.antivoter_state_threats + threats
+
+    @property
+    def election_threat_litigation(self):
+        return [t for t in self.threat_litigation if int(t.threat_key) < 200]
+
+    @election_threat_litigation.setter
+    def election_threat_litigation(self, threats):
+        assert all(int(t.id) < 200 for t in threats)
+        self.threat_litigation = self.antivoter_threat_litigation + threats
+
+    @property
+    def election_threat_doj(self):
+        return [t for t in self.threat_doj if int(t.threat_key) < 200]
+
+    @election_threat_doj.setter
+    def election_threat_doj(self, threats):
+        assert all(int(t.id) < 200 for t in threats)
+        self.threat_doj = self.antivoter_threat_doj + threats
+
+    @property
+    def election_threat_organizing(self):
+        return [t for t in self.threat_organizing if int(t.threat_key) < 200]
+
+    @election_threat_organizing.setter
+    def election_threat_organizing(self, threats):
+        assert all(int(t.id) < 200 for t in threats)
+        self.threat_organizing = self.antivoter_state_threats + threats
+
+    @property
+    def antivoter_state_threats(self):
+        return [t for t in self.state_threats if int(t.threat_key) >= 200]
+
+    @antivoter_state_threats.setter
+    def antivoter_state_threats(self, threats):
+        assert all(int(t.id) >= 200 for t in threats)
+        self.state_threats = self.election_state_threats + threats
+
+    @property
+    def antivoter_threat_litigation(self):
+        return [t for t in self.threat_litigation if int(t.threat_key) >= 200]
+
+    @antivoter_threat_litigation.setter
+    def antivoter_threat_litigation(self, threats):
+        assert all(int(t.id) >= 200 for t in threats)
+        self.threat_litigation = self.election_threat_litigation + threats
+
+    @property
+    def antivoter_threat_doj(self):
+        return [t for t in self.threat_doj if int(t.threat_key) >= 200]
+
+    @antivoter_threat_doj.setter
+    def antivoter_threat_doj(self, threats):
+        assert all(int(t.id) >= 200 for t in threats)
+        self.threat_doj = self.election_threat_doj + threats
+
+    @property
+    def antivoter_threat_organizing(self):
+        return [t for t in self.threat_organizing if int(t.threat_key) >= 200]
+
+    @antivoter_threat_organizing.setter
+    def antivoter_threat_organizing(self, threats):
+        assert all(int(t.id) >= 200 for t in threats)
+        self.threat_organizing = self.election_threat_organizing + threats
 
 
 class Legislation(db.Model):
@@ -219,7 +290,7 @@ class Threats(db.Model):
         return self.name
 
     id = db.Column(db.Integer, primary_key=True)
-    threat_key = db.Column(db.Text)
+    threat_key = db.Column(db.Integer)
     name = db.Column(db.Text)
     source = db.Column(db.Text)
     does = db.Column(db.Text)

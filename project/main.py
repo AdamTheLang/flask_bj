@@ -131,67 +131,21 @@ def states(abbrev=None):
 
     this_state = [s for s in all_states if abbrev == s.abbrev][0]
     form = forms.StateForm(obj=this_state)
-    threat_objs = models.Threats.query.order_by(models.Threats.threat_key).all()
-    election_threats = [(t.id, '') for t in threat_objs if int(t.threat_key) < 200]
-    antivoter_threats = [(t.id, '') for t in threat_objs if int(t.threat_key) > 199]
-    labeled_election_threats = [(t.id, '\xa0' * 20 + t.name) for t in threat_objs if int(t.threat_key) < 200]
-    labeled_antivoter_threats = [(t.id, '\xa0' * 20 + t.name) for t in threat_objs if int(t.threat_key) > 199]
-
-    form.election_state_threats.choices = election_threats
-    form.election_threat_litigation.choices = election_threats
-    form.election_threat_doj.choices = election_threats
-    form.election_threat_organizing.choices = labeled_election_threats
-
-    form.antivoter_state_threats.choices = antivoter_threats
-    form.antivoter_threat_litigation.choices = antivoter_threats
-    form.antivoter_threat_doj.choices = antivoter_threats
-    form.antivoter_threat_organizing.choices = labeled_antivoter_threats
-
     if form.validate_on_submit():
-        state_threat_ids = form.election_state_threats.data + form.antivoter_state_threats.data
-        state_threats = models.Threats.query.filter(models.Threats.id.in_(state_threat_ids))
-        threat_litigation_ids = form.election_threat_litigation.data + form.antivoter_threat_litigation.data
-        threat_litigation = models.Threats.query.filter(models.Threats.id.in_(threat_litigation_ids))
-        threat_doj_ids = form.election_threat_doj.data + form.antivoter_threat_doj.data
-        threat_doj = models.Threats.query.filter(models.Threats.id.in_(threat_doj_ids))
-        threat_organizing_ids = form.election_threat_organizing.data + form.antivoter_threat_organizing.data
-        threat_organizing = models.Threats.query.filter(models.Threats.id.in_(threat_organizing_ids))
-
         form.populate_obj(this_state)
-        this_state.state_threats = state_threats.all()
-        this_state.threat_litigation = threat_litigation.all()
-        this_state.threat_doj = threat_doj.all()
-        this_state.threat_organizing = threat_organizing.all()
-
         db.session.add(this_state)
         db.session.commit()
         return redirect('/edit_state')
 
+    election_threat_zip = zip(form.election_state_threats,
+                              form.election_threat_litigation,
+                              form.election_threat_doj,
+                              form.election_threat_organizing)
+    antivoter_threat_zip = zip(form.antivoter_state_threats,
+                               form.antivoter_threat_litigation,
+                               form.antivoter_threat_doj,
+                               form.antivoter_threat_organizing)
 
-    form.election_state_threats.data = [
-        t.id for t in this_state.state_threats if int(t.threat_key) < 200
-    ]
-    form.election_threat_litigation.data = [
-        t.id for t in this_state.threat_litigation if int(t.threat_key) < 200
-    ]
-    form.election_threat_doj.data = [
-        t.id for t in this_state.threat_doj if int(t.threat_key) < 200
-    ]
-    form.election_threat_organizing.data = [
-        t.id for t in this_state.threat_organizing if int(t.threat_key) < 200
-    ]
-    form.antivoter_threat_doj.data = [
-        t.id for t in this_state.threat_doj if int(t.threat_key) > 199
-    ]
-    form.antivoter_state_threats.data = [
-        t.id for t in this_state.state_threats if int(t.threat_key) > 199
-    ]
-    form.antivoter_threat_litigation.data = [
-        t.id for t in this_state.threat_litigation if int(t.threat_key) > 199
-    ]
-    form.antivoter_threat_organizing.data = [
-        t.id for t in this_state.threat_organizing if int(t.threat_key) > 199
-    ]
-
-    return render_template('edit_state.html', form=form, abbrev=abbrev)
-
+    return render_template('edit_state.html', form=form, abbrev=abbrev,
+                           election_threats=election_threat_zip,
+                           antivoter_threats=antivoter_threat_zip)

@@ -25,6 +25,11 @@ class MultiCheckboxField(SelectMultipleField):
     option_widget = widgets.CheckboxInput()
 
 
+class QueryMultiCheckboxField(QuerySelectMultipleField):
+    widget = widgets.ListWidget(prefix_label=False)
+    option_widget = widgets.CheckboxInput()
+
+
 def validate_is_phone(form, field):
     phone_int = int(''.join(filter(str.isdigit, field.data)))
     if not (1999999999 < phone_int < 19999999999):
@@ -355,34 +360,34 @@ class StateForm(FlaskForm):
         validators=[validators.Length(max=5000)]
     )
 
-    election_state_threats = MultiCheckboxField(
-        label='', choices=[], coerce=int
+    election_state_threats = QueryMultiCheckboxField(
+        label='', query_factory=_election_threat_query_factory
     )
 
-    election_threat_litigation = MultiCheckboxField(
-        label='', choices=[], coerce=int
+    election_threat_litigation = QueryMultiCheckboxField(
+        label='', query_factory=_election_threat_query_factory
     )
 
-    election_threat_doj = MultiCheckboxField(
-        label='', choices=[], coerce=int
+    election_threat_doj = QueryMultiCheckboxField(
+        label='', query_factory=_election_threat_query_factory
     )
 
-    election_threat_organizing = MultiCheckboxField(
-        label='', choices=[], coerce=int
+    election_threat_organizing = QueryMultiCheckboxField(
+        label='', query_factory=_election_threat_query_factory
     )
 
-    antivoter_state_threats = MultiCheckboxField(
-        label='', choices=[], coerce=int
+    antivoter_state_threats = QueryMultiCheckboxField(
+        label='', query_factory=_antivoter_threat_query_factory
     )
 
-    antivoter_threat_litigation = MultiCheckboxField(
-        label='', choices=[], coerce=int
+    antivoter_threat_litigation = QueryMultiCheckboxField(
+        label='', query_factory=_antivoter_threat_query_factory
     )
 
-    antivoter_threat_doj = MultiCheckboxField(
-        label='', choices=[], coerce=int
+    antivoter_threat_doj = QueryMultiCheckboxField(
+        label='', query_factory=_antivoter_threat_query_factory
     )
 
-    antivoter_threat_organizing = MultiCheckboxField(
-        label='', choices=[], coerce=int
+    antivoter_threat_organizing = QueryMultiCheckboxField(
+        label='', query_factory=_antivoter_threat_query_factory
     )

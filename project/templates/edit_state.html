@@ -104,7 +104,7 @@
             <br>
         </fieldset>
         <br>
-        {% from "_formhelpers.html" import render_field %}
+        {% from "_formhelpers.html" import render_field_no_label %}
         <fieldset>
             <p class="tab10"><font size="+2">Election Subversion/Politicization Threats</font></p>
             <div class="tab10"><table style="width:100%">
@@ -112,13 +112,19 @@
                     <th><font size="-1">Threat<br>Present&nbsp;&nbsp;&nbsp;&nbsp;</font></th>
                     <th><font size="-1">Litigation<br>Response</font></th>
                     <th><font size="-1">DOJ<br>Response</font></th>
-                    <th><font size="-1">Counter-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Threat Name<br>Organizing</font></th>
+                    <th><font size="-1">Counter-<br>Organizing</font></th>
+                    <th><font size="-1">Threat Name</font></th>
                 </font></tr>
-                <tr>
-                    <td>{{ render_field(form.election_state_threats)}} </td>
-                    <td>{{ render_field(form.election_threat_litigation) }}</td>
-                    <td>{{ render_field(form.election_threat_doj) }}</td>
-                    <td>{{ render_field(form.election_threat_organizing) }}</td>
+                    {% for threat, litigation, doj, organizing in election_threats %}
+                        {% set label = threat.label %}
+                        <tr>
+                            <td>{{ render_field_no_label(threat) }}</td>
+                            <td>{{ render_field_no_label(litigation) }}</td>
+                            <td>{{ render_field_no_label(doj) }}</td>
+                            <td>{{ render_field_no_label(organizing) }}</td>
+                            <td>{{ label }}</td>
+                        </tr>
+                    {% endfor %}
                 </tr>
             </table></div>
         <br>
@@ -130,14 +136,19 @@
                     <th><font size="-1">Threat<br>Present&nbsp;&nbsp;&nbsp;&nbsp;</font></th>
                     <th><font size="-1">Litigation<br>Response</font></th>
                     <th><font size="-1">DOJ<br>Response</font></th>
-                    <th><font size="-1">Counter-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Threat Name<br>Organizing</font></th>
+                    <th><font size="-1">Counter-<br>Organizing</font></th>
+                    <th><font size="-1">Threat Name</font></th>
                 </tr>
-                <tr>
-                    <td>{{ render_field(form.antivoter_state_threats) }}</td>
-                    <td>{{ render_field(form.antivoter_threat_litigation) }}</td>
-                    <td>{{ render_field(form.antivoter_threat_doj) }}</td>
-                    <td>{{ render_field(form.antivoter_threat_organizing) }}</td>
-                </tr>
+                    {% for threat, litigation, doj, organizing in antivoter_threats %}
+                        {% set label = threat.label %}
+                        <tr>
+                            <td>{{ render_field_no_label(threat) }}</td>
+                            <td>{{ render_field_no_label(litigation) }}</td>
+                            <td>{{ render_field_no_label(doj) }}</td>
+                            <td>{{ render_field_no_label(organizing) }}</td>
+                            <td>{{ label }}</td>
+                        </tr>
+                    {% endfor %}
             </table></div>
         <br>
         </fieldset>

@@ -11,6 +11,10 @@
   </dd>
 {% endmacro %}
 
+{% macro render_field_no_label(field) %}
+  <dd><p class="tab10">{{ field(**kwargs)|safe }}</dd>
+{% endmacro %}
+
 {% macro render_url_field(field) %}
   {% if field.data %}
     <dt><p class="tab10">{{ field.label }} (<a href="{{ field.data }}">visit url</a>)</p></dt>
