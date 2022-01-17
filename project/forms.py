@@ -214,7 +214,7 @@ class OrganizationEditForm(FlaskForm):
     )
 
     issues = QuerySelectMultipleField(
-        label='Primary Issues',
+        label='Action Issues',
         query_factory=_issue_query_factory
     )
 
@@ -290,7 +290,7 @@ class OrganizationEditForm(FlaskForm):
     )
 
     threat_response = TextAreaField(
-        label='Responding to Primary Threats',
+        label='Threats Responded To',
         validators=[validators.Length(max=5000)]
     )
 
@@ -312,12 +312,42 @@ class ThreatForm(FlaskForm):
     matters = TextAreaField('Why It Matters', [validators.Length(max=5000)])
 
 
+class StateSearchForm(FlaskForm):
+    def __init__(self, *args, **kwargs):
+        super(StateSearchForm, self).__init__(*args, **kwargs)
+        states = models.States.query.order_by(models.States.name).all()
+        self.state.choices = (
+            [('Any', 'Any'), ] + [(s.abbrev, s.name) for s in states]
+        )
+
+    state = SelectField(
+        label='State',
+    )
+
+    threat_rating = SelectField(
+        label='Threat Level',
+        choices=[
+            (-1, 'Any'),
+            (0, 'Unset'),
+            (1, 'Okay For Now'),
+            (5, 'At Risk'),
+            (10, 'Hair On Fire')
+        ]
+    )
+
+
 class StateForm(FlaskForm):
 
     name = StringField('State Name', [validators.Length(min=3),
                                       validators.Length(max=25)])
     threat_rating = SelectField(
-        label='Threat Level', choices=[(x, str(x)) for x in range(1, 11)]
+        label='Threat Level',
+        choices=[
+            (0, 'Unset'),
+            (1, 'Okay For Now'),
+            (5, 'At Risk'),
+            (10, 'Hair On Fire')
+        ]
     )
 
     republican_strategy = TextAreaField(
@@ -390,4 +420,69 @@ class StateForm(FlaskForm):
 
     antivoter_threat_organizing = QueryMultiCheckboxField(
         label='', query_factory=_antivoter_threat_query_factory
+    )
+
+
+class LegislationForm(FlaskForm):
+
+    name = StringField('Legislation Name', [validators.Length(min=3),
+                                            validators.Length(max=100)])
+
+    state_obj = QuerySelectField(
+        label='State',
+        query_factory=_state_query_factory,
+        validators=[validate_not_empty_state]
+    )
+
+    abbrev = StringField('Identifier (e.g. HR-11)', [validators.Length(max=20)])
+    desc = TextAreaField('Description/Details', [validators.Length(max=5000)])
+
+    introduced = DateField(
+        label='Date Introduced',
+        format='%m/%d/%y',
+        validators=[validators.Optional()]
+    )
+
+    status_updated = DateField(
+        label='Status Current As Of',
+        format='%m/%d/%y',
+        validators=[validators.Optional()]
+    )
+
+    current_status = StringField('Current Status', [validators.Length(max=80)])
+    defunct = BooleanField('Defunct')
+
+    threat_level = SelectField(
+        label='Threat Level',
+        choices=[
+            (0, 'Unset'),
+            (1, 'Low'),
+            (5, 'Significant'),
+            (10, 'Hair On Fire')
+        ]
+    )
+
+    targets = TextAreaField(
+        label="Legislation Targets and Goals",
+        validators=[validators.Length(max=5000)]
+    )
+
+    doj_response = TextAreaField(
+        label="DOJ Response",
+        validators=[validators.Length(max=5000)]
+    )
+
+    sources = TextAreaField(
+        label="Information Sources",
+        validators=[validators.Length(max=5000)]
+    )
+
+    election_threats =  QueryMultiCheckboxField(
+        label='Legislation Election Subversion/Politicization Threats',
+        query_factory=_election_threat_query_factory
+    )
+
+    antivoter_threats =  QueryMultiCheckboxField(
+        label='Legislation Anti-Voter/Anti-Voting Threats',
+        query_factory=_antivoter_threat_query_factory
     )

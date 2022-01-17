@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <p><font size="+4">Legislation</font>
+    <p><font size="+2">Add/Edit</font>
+    <form method="POST">
+        {{ form.csrf_token }}
+        {% from "_formhelpers.html" import render_field %}
+        <br><fieldset>
+            <p><font size="+2">General Information</font></p>
+            {{ render_field(form.name, size=40) }}
+            {{ render_field(form.state_obj) }}
+            {{ render_field(form.abbrev, size=18) }}
+            {{ render_field(form.threat_level) }}
+            {{ render_field(form.desc, rows=6, cols=39) }}
+            {{ render_field(form.targets, rows=6, cols=39) }}
+            {{ render_field(form.sources, rows=6, cols=39) }}
+            <br>
+        </fieldset>
+        <br>
+        <fieldset>
+            <p class="tab10"><font size="+2">Bill Status</font></p>
+            {{ render_field(form.defunct) }}
+            {{ render_field(form.introduced, placeholder="e.g. 03/02/21") }}
+            {{ render_field(form.status_updated, placeholder="e.g. 03/02/21") }}
+            {{ render_field(form.current_status, size=40) }}
+            {{ render_field(form.doj_response, rows=6, cols=39) }}
+            <br>
+        </fieldset>
+        <br>
+        <fieldset>
+            <p class="tab10"><font size="+2">Threats Created By The Bill</font></p>
+            <div class="tab10"><table style="width:100%">
+                <tr>
+                    <td>{{ render_field(form.election_threats) }}</td>
+                    <td>{{ render_field(form.antivoter_threats) }}</td>
+                </tr>
+            </table></div>
+            <br>
+        </fieldset><br>
+        <input type="submit" disabled style="display: none" aria-hidden="true" />
+        <input type="submit" value="Save" style="width: 100px; height: 35px;">
+    </form>
+{% endblock %}

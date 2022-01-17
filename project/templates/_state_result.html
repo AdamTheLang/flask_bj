@@ -1,0 +1,7 @@
+{% macro state_list_item(state, threat_lookup) %}
+    <tr>
+        <td><a href="/edit_state/{{ state.abbrev }}">{{ state.name }}</a></td>
+        <td></td>
+        <td>{{ threat_lookup[state.threat_rating] }}</td>
+    </tr>
+{% endmacro %}

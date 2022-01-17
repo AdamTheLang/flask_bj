@@ -95,7 +95,7 @@ class States(db.Model):
 
     @election_state_threats.setter
     def election_state_threats(self, threats):
-        assert all(int(t.id) < 200 for t in threats)
+        assert all(int(t.threat_key) < 200 for t in threats)
         self.state_threats = self.antivoter_state_threats + threats
 
     @property
@@ -104,7 +104,7 @@ class States(db.Model):
 
     @election_threat_litigation.setter
     def election_threat_litigation(self, threats):
-        assert all(int(t.id) < 200 for t in threats)
+        assert all(int(t.threat_key) < 200 for t in threats)
         self.threat_litigation = self.antivoter_threat_litigation + threats
 
     @property
@@ -113,7 +113,7 @@ class States(db.Model):
 
     @election_threat_doj.setter
     def election_threat_doj(self, threats):
-        assert all(int(t.id) < 200 for t in threats)
+        assert all(int(t.threat_key) < 200 for t in threats)
         self.threat_doj = self.antivoter_threat_doj + threats
 
     @property
@@ -122,7 +122,7 @@ class States(db.Model):
 
     @election_threat_organizing.setter
     def election_threat_organizing(self, threats):
-        assert all(int(t.id) < 200 for t in threats)
+        assert all(int(t.threat_key) < 200 for t in threats)
         self.threat_organizing = self.antivoter_state_threats + threats
 
     @property
@@ -131,7 +131,7 @@ class States(db.Model):
 
     @antivoter_state_threats.setter
     def antivoter_state_threats(self, threats):
-        assert all(int(t.id) >= 200 for t in threats)
+        assert all(int(t.threat_key) >= 200 for t in threats)
         self.state_threats = self.election_state_threats + threats
 
     @property
@@ -140,7 +140,7 @@ class States(db.Model):
 
     @antivoter_threat_litigation.setter
     def antivoter_threat_litigation(self, threats):
-        assert all(int(t.id) >= 200 for t in threats)
+        assert all(int(t.threat_key) >= 200 for t in threats)
         self.threat_litigation = self.election_threat_litigation + threats
 
     @property
@@ -149,7 +149,7 @@ class States(db.Model):
 
     @antivoter_threat_doj.setter
     def antivoter_threat_doj(self, threats):
-        assert all(int(t.id) >= 200 for t in threats)
+        assert all(int(t.threat_key) >= 200 for t in threats)
         self.threat_doj = self.election_threat_doj + threats
 
     @property
@@ -158,28 +158,64 @@ class States(db.Model):
 
     @antivoter_threat_organizing.setter
     def antivoter_threat_organizing(self, threats):
-        assert all(int(t.id) >= 200 for t in threats)
+        assert all(int(t.threat_key) >= 200 for t in threats)
         self.threat_organizing = self.election_threat_organizing + threats
+
+
+legislation_threats = db.Table(
+    'legislation_threats',
+    db.Column('legislation_id', db.Integer, db.ForeignKey('legislation.id')),
+    db.Column('threat_id', db.Integer, db.ForeignKey('threats.id'))
+)
+
+
+group_legislation = db.Table(
+    'group_legislation',
+    db.Column('group_id', db.Integer, db.ForeignKey('groups.id')),
+    db.Column('legislation_id', db.Integer, db.ForeignKey('legislation.id'))
+)
 
 
 class Legislation(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.Text)
     state = db.Column(db.String(2), db.ForeignKey('states.abbrev'))
+    state_obj = db.relationship("States")
+
     # canonical string for IDing the legislation and associated engagements
     abbrev = db.Column(db.Text)
     desc = db.Column(db.Text)
     leg_type = db.Column(db.Text)
     introduced = db.Column(db.Date)
-    status_updated = db.Column(db.Date, nullable=False,
-                               server_default="CURRENT_DATE")
+    status_updated = db.Column(db.Date)
     current_status = db.Column(db.Text)
     defunct = db.Column(db.Boolean)
-    # Let's just make it 0 to 5 for now and if we start doing this with
-    # legislation we support we can use -1 to -5.
+
     threat_level = db.Column(db.Integer, nullable=False, default=0)
     targets = db.Column(db.Text)
     doj_response = db.Column(db.Text)
     sources = db.Column(db.Text)
+
+    threats =  db.relationship("Threats", secondary=legislation_threats)
+    groups = db.relationship("Groups", secondary=group_legislation, viewonly=True)
+
+    @property
+    def antivoter_threats(self):
+        return [t for t in self.threats if int(t.threat_key) >= 200]
+
+    @antivoter_threats.setter
+    def antivoter_threats(self, threats):
+        assert all(int(t.threat_key) >= 200 for t in threats)
+        self.threats = self.election_threats + threats
+
+    @property
+    def election_threats(self):
+        return [t for t in self.threats if int(t.threat_key) < 200]
+
+    @election_threats.setter
+    def election_threats(self, threats):
+        assert all(int(t.threat_key) < 200 for t in threats)
+        self.threats = self.antivoter_threats + threats
 
 
 class Engagements(db.Model):
@@ -188,8 +224,7 @@ class Engagements(db.Model):
     legislation_id = db.Column(db.Integer, db.ForeignKey('legislation.id'))
     strategy = db.Column(db.Text)
     status = db.Column(db.Text)
-    status_updated = db.Column(db.Date, nullable=False,
-                               server_default="CURRENT_DATE")
+    status_updated = db.Column(db.Date, nullable=False)
     closed = db.Column(db.Boolean)
 
 
@@ -221,6 +256,7 @@ class Groups(db.Model):
 
     issues = db.relationship("Issues", secondary=group_issues)
     populations = db.relationship("Populations", secondary=group_populations)
+    legislation = db.relationship("Legislation", secondary=group_legislation)
 
     actions = db.Column(db.Text)
     bj_contact = db.Column(db.String(40))
@@ -278,8 +314,7 @@ class Actions(db.Model):
     desc = db.Column(db.Text)
     engagement_id = db.Column(db.Integer, db.ForeignKey('engagements.id'))
     status = db.Column(db.Text)
-    status_updated = db.Column(db.Date, nullable=False,
-                               server_default="CURRENT_DATE")
+    status_updated = db.Column(db.Date)
     closed = db.Column(db.Boolean)
     # does this need a team id or is it enough that the engagement has one?
     # does this need group ids or is it enough that the engagement has one?

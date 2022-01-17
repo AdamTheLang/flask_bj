@@ -52,7 +52,6 @@ def edit_org(org_id=None):
 @login_required
 def find_org():
     form = forms.OrganizationSearchForm(request.args)
-    print(form.state.data)
     query = models.Groups.query
     if form.org_name.data:
         query = query.filter(
@@ -146,6 +145,73 @@ def states(abbrev=None):
                                form.antivoter_threat_doj,
                                form.antivoter_threat_organizing)
 
+    current_legislation = list(
+        models.Legislation.query
+        .filter_by(state=abbrev, defunct=0)
+        .order_by(models.Legislation.abbrev).all()
+    )
+    defunct_legislation = list(
+        models.Legislation.query
+        .filter_by(state=abbrev, defunct=1)
+        .order_by(models.Legislation.abbrev).all()
+    )
+
+    leg_tl = {
+        0: 'Unset',
+        1: 'Low',
+        5: 'Significant',
+        10: 'Hair On Fire'
+    }
+
     return render_template('edit_state.html', form=form, abbrev=abbrev,
                            election_threats=election_threat_zip,
-                           antivoter_threats=antivoter_threat_zip)
+                           antivoter_threats=antivoter_threat_zip,
+                           current_legislation=current_legislation,
+                           defunct_legislation=defunct_legislation,
+                           legislation_threat_lookup=leg_tl)
+
+
+@main.route('/find_state/', methods=['GET'])
+@main.route('/find_state', methods=['GET'])
+@login_required
+def find_state():
+    form = forms.StateSearchForm(request.args)
+    query = models.States.query
+    if form.threat_rating.data and form.threat_rating.data != -1:
+        query = query.filter_by(threat_rating=form.threat_rating.data)
+
+    results = list(query.order_by(models.States.threat_rating.desc()).all())
+    tl = {
+        0: 'Unset',
+        1: 'Okay For Now',
+        5: 'At Risk',
+        10: 'Hair On Fire'
+    }
+
+    return render_template(
+        'find_state.html', form=form, results=results, threat_lookup=tl
+    )
+
+
+@main.route('/edit_leg/<leg_id>', methods=['GET', 'POST'])
+@main.route('/edit_leg/', methods=['GET', 'POST'])
+@main.route('/edit_leg/', methods=['GET', 'POST'])
+def legislation(leg_id=None):
+    legislation = None
+    if leg_id:
+        legislation = models.Legislation.query.filter_by(id=leg_id).first()
+        if not legislation:
+            abort(404)
+        form = forms.LegislationForm(obj=legislation)
+    else:
+        form = forms.LegislationForm()
+
+    if form.validate_on_submit():
+        if not legislation:
+            legislation = models.Legislation()
+        form.populate_obj(legislation)
+        db.session.add(legislation)
+        db.session.commit()
+        return redirect('/edit_state/' + legislation.state_obj.abbrev + "#legislation")
+
+    return render_template('edit_leg.html', form=form)

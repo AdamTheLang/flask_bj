@@ -49,18 +49,13 @@
                                         </a>
                                     </td>
                                     <td>
-                                        <a href="/edit_org" class="navbar-item">
-                                            New Organization
-                                        </a>
-                                    </td>
-                                    <td>
                                         <a href="/find_org" class="navbar-item">
-                                            Find Organization
+                                            Organizations
                                         </a>
                                     </td>
                                     <td>
-                                        <a href="/edit_state/" class="navbar-item">
-                                            State Info
+                                        <a href="/find_state/" class="navbar-item">
+                                            States &amp; Legislation
                                         </a>
                                     </td>
                                     <td>
@@ -68,6 +63,7 @@
                                             Threats
                                         </a>
                                     </td>
+
                                     {% if current_user.admin %}
                                         <td>
                                             <a href="{{ url_for('auth.signup') }}" class="navbar-item">
