@@ -23,9 +23,17 @@
                 defunct_div.style.display = "none";
             }
         }
+        function hideShow(label) {
+            var section = document.getElementById(label);
+            if (section.style.display === "none") {
+                section.style.display = "block";
+            } else {
+                section.style.display = "none";
+            }
+        }
     </script>
 
-    <p><font size="+4">Edit State</font>
+    <p><font size="+4">State of the State</font>
     {% if not current_user.admin %}
         Note: read only. Only admins may edit.
     {% endif %}
@@ -40,8 +48,15 @@
         <br>
         <fieldset>
             <table style="width:100%"><tr>
-                <th>{{ render_field(form.name, size=40) }}</th>
-                <th>{{ render_field(form.threat_rating) }}</th>
+                <td>{{ render_field(form.name, size=40) }}</td>
+                <td>{{ render_field(form.threat_rating) }}</td>
+                {% if current_user.admin and abbrev %}
+                    <td>
+                        <br>
+                        <input type="submit" disabled style="display: none" aria-hidden="true" />
+                        <input type="submit" value="Save Changes" style="width: 100px; height: 35px;">
+                    </td>
+                {% endif %}
             </tr></table>
             <br>
         </fieldset>
@@ -55,8 +70,8 @@
         <br>
         <fieldset>
             <p class="tab10">
-                <font size="+2">State of the State&nbsp;</font>
-                <button type="button" onclick="hideShowSotS()">Hide/Show</button>
+                <font size="+2">State Government&nbsp;</font>
+                <button type="button" onclick="hideShow('SotS')">Hide/Show</button>
             </p>
             <div class="tab10" id="SotS" style="display:none">
                 {{ render_field(form.lege_desc, rows=6, cols=39) }}
@@ -65,14 +80,24 @@
                 {{ render_field(form.supreme_court, rows=6, cols=39) }}
                 {{ render_field(form.national_officials, rows=6, cols=39) }}
                 {{ render_field(form.redistricting, rows=6, cols=39) }}
-                <br><br>
-                <p><font size="+2">Further Sources of Information</font></p>
+                <br>
+            </div>
+        </fieldset>
+        <br>
+        <fieldset><div class="tab10">
+            <p>
+                <font size="+2">Further Sources of Information</font>
+                <button type="button" onclick="hideShow('further_info')">Hide/Show</button>
+            </p>
+            <div id="further_info" style="display:none">
                 <a href="https://ballotpedia.org">Ballotpedia</a>
                 <br><a href="https://tracker.votingrightslab.org/pending/snapshot">Voting Rights Lab State Voting Rights Tracker</a>
-                <br>Voting Rights Lab 50-State Chart (Link to come)
-            </dev>
-            <br>
-        </fieldset>
+                <br><a href="https://docs.google.com/spreadsheets/d/1nWvvBRGMFbLM83gw8nEq4SeSFKCvp0lMwNq3t-d5WK0/edit#gid=554515035">
+                    Voting Rights Lab 50-State Chart
+                </a>
+               <br><br>
+            </div>
+        </div></fieldset>
         <div id="legislation"></div>
         <br>
         <fieldset>
@@ -91,7 +116,7 @@
                 {% endfor %}
             </table>
             <br>
-            <p>Defunct  <button type="button" onclick="hideShowDefunct()">Hide/Show</button></p>
+            <p>Defunct  <button type="button" onclick="hideShow('DefunctBills')">Hide/Show</button></p>
             <div class="tab10" id="DefunctBills" style="display:none"><table>
                 <tr><th>Designation&nbsp;&nbsp;&nbsp;</th><th>Name&nbsp;&nbsp;&nbsp;</th><th>Threat Lvl&nbsp;&nbsp;&nbsp;</th></tr>
                 {% for bill in defunct_legislation %}
@@ -105,6 +130,20 @@
             </div>
         <br>
         </fieldset>
+        <br>
+        <fieldset>
+            <div class="tab10">
+            <p><font size="+2">{{ form.name.data }} Litigation</font></p>
+            <p>Add New Litigation (coming soon!)</p>
+            <p>Currently Active</p>
+            <br><br>
+            <p>Complete/Mooted   <button type="button" onclick="hideShow('DefunctLitigation')">Hide/Show</button></p>
+            <div class="tab10" id="DefunctLitigation" style="display:none">
+            <br><br>
+            </div>
+        <br>
+        </fieldset>
+
         <br>
         {% from "_formhelpers.html" import render_field_no_label %}
         <fieldset>
@@ -162,7 +201,6 @@
         <br>
         </fieldset>
         {% if current_user.admin and abbrev %}
-            <input type="submit" disabled style="display: none" aria-hidden="true" />
             <input type="submit" value="Save" style="width: 100px; height: 35px;">
         {% endif %}
 
