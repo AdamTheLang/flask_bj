@@ -23,14 +23,14 @@
     <p><font size="+4">Activist Organizations</font></p>
     <p><font size="+2"><a href="/edit_org">Create New Organization</a></font></p>
     <form method="GET">
-        {% from "_formhelpers.html" import render_field %}
+        {% from "_formhelpers.html" import render_always_editable_field with context %}
         <fieldset>
         <p class="tab10"><font size="+2">Find</font></p>
-        {{ render_field(form.org_name, size=40) }}
-        {{ render_field(form.bj_contact, size=40) }}
-        {{ render_field(form.state) }}
-        {{ render_field(form.issue) }}
-        {{ render_field(form.population) }}<br>
+        {{ render_always_editable_field(form.org_name, size=40) }}
+        {{ render_always_editable_field(form.bj_contact, size=40) }}
+        {{ render_always_editable_field(form.state) }}
+        {{ render_always_editable_field(form.issue) }}
+        {{ render_always_editable_field(form.population) }}<br>
         </fieldset>
         <br>
         <input type="submit" value="Search" style="width: 100px; height: 35px;">
@@ -40,7 +40,7 @@
     {% if results %}
         <table>
             <tr><th>Organization name</th><th>&emsp;&emsp;state</th></tr>
-            {% from "_org_result.html" import org_list_item %}
+            {% from "_org_result.html" import org_list_item with context %}
             <style>
                 a {
                     text-decoration: underline;

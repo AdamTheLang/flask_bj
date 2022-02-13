@@ -217,6 +217,50 @@ class Legislation(db.Model):
         assert all(int(t.threat_key) < 200 for t in threats)
         self.threats = self.antivoter_threats + threats
 
+#
+# group_litigation = db.Table(
+#     'group_litigation',
+#     db.Column('group_id', db.Integer, db.ForeignKey('groups.id')),
+#     db.Column('litigation_id', db.Integer, db.ForeignKey('litigation.id'))
+# )
+#
+#
+# legislation_litigation = db.Table(
+#     'legislation_litigation',
+#     db.Column('litigation_id', db.Integer, db.ForeignKey('litigation.id')),
+#     db.Column('legislation_id', db.Integer, db.ForeignKey('legislation.id'))
+# )
+#
+#
+# class Litigation(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     name = db.Column(db.Text)
+#     notes = db.Column(db.Text)
+#
+#     state = db.Column(db.String(2), db.ForeignKey('states.abbrev'))
+#     state_obj = db.relationship("States")
+#
+#     groups = db.relationship("Groups", secondary=group_litigation, viewonly=True)
+#     threats =  db.relationship("Threats", secondary=legislation_threats)
+#
+#     @property
+#     def antivoter_threats(self):
+#         return [t for t in self.threats if int(t.threat_key) >= 200]
+#
+#     @antivoter_threats.setter
+#     def antivoter_threats(self, threats):
+#         assert all(int(t.threat_key) >= 200 for t in threats)
+#         self.threats = self.election_threats + threats
+#
+#     @property
+#     def election_threats(self):
+#         return [t for t in self.threats if int(t.threat_key) < 200]
+#
+#     @election_threats.setter
+#     def election_threats(self, threats):
+#         assert all(int(t.threat_key) < 200 for t in threats)
+#         self.threats = self.antivoter_threats + threats
+
 
 class Engagements(db.Model):
     id = db.Column(db.Integer, primary_key=True)

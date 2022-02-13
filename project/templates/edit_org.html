@@ -5,9 +5,9 @@
     <p><font size="+2">Add/Edit</font>
     <form method="POST">
         {{ form.csrf_token }}
-        {% from "_formhelpers.html" import render_field %}
-        {% from "_formhelpers.html" import render_url_field %}
-        {% from "_formhelpers.html" import render_email_field %}
+        {% from "_formhelpers.html" import render_field with context %}
+        {% from "_formhelpers.html" import render_url_field with context %}
+        {% from "_formhelpers.html" import render_email_field with context %}
         <br><fieldset>
             <p><table><tr>
                 <td><p class="tab10">
@@ -61,6 +61,10 @@
             <br>
         </fieldset><br>
         <input type="submit" disabled style="display: none" aria-hidden="true" />
-        <input type="submit" value="Save" style="width: 100px; height: 35px;">
+        {% if current_user.is_authenticated %}
+            <input type="submit" value="Save" style="width: 100px; height: 35px;">
+        {% else %}
+            <input type="submit" value="Save" style="width: 100px; height: 35px;" disabled>
+        {% endif %}
     </form>
 {% endblock %}
