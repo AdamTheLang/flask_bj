@@ -89,9 +89,9 @@
     </form>
     <br>
     <form method="GET">
-        {% from "_formhelpers.html" import render_field %}
+        {% from "_formhelpers.html" import render_always_editable_field with context %}
         <fieldset>
-        {{ render_field(form.threat_rating) }}
+        {{ render_always_editable_field(form.threat_rating) }}
         <br>
         </fieldset>
         <br>
@@ -102,7 +102,7 @@
     {% if results %}
         <table>
             <tr><th>State</th><th>&emsp;&emsp;</th><th>Threat Level</th></tr>
-            {% from "_state_result.html" import state_list_item %}
+            {% from "_state_result.html" import state_list_item with context %}
             <style>
                 a {
                     text-decoration: underline;

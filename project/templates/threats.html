@@ -7,7 +7,7 @@
             <tr><th>Threat ID</th>
             <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
             <th>Threat Name</th></tr>
-            {% from "_threat_result.html" import threat_list_item %}
+            {% from "_threat_result.html" import threat_list_item with context %}
             <style>
                 a {
                     text-decoration: underline;
@@ -28,7 +28,7 @@
     <form method="POST">
         {{ form.csrf_token }}
         {% if current_user.admin %}
-            {% from "_formhelpers.html" import render_field %}
+            {% from "_formhelpers.html" import render_field with context %}
         {% else %}
             {% from "_displayhelpers.html" import render_field %}
         {% endif %}

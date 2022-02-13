@@ -35,6 +35,9 @@
                 <div class="container">
 
                     <div id="navbarMenuHeroA">
+                        {% if not current_user.is_authenticated %}
+                            <font size="-1">(Not Authenticated)</font>
+                        {% endif %}
                         <div class="navbar-start">
                             <table><tr>
                                 <td>
@@ -42,36 +45,21 @@
                                         Home
                                     </a>
                                 </td>
-                                {% if current_user.is_authenticated %}
-                                    <td>
-                                        <a href="/profile" class="navbar-item">
-                                            Profile
-                                        </a>
-                                    </td>
-                                    <td>
-                                        <a href="/find_org" class="navbar-item">
-                                            Organizations
-                                        </a>
-                                    </td>
-                                    <td>
-                                        <a href="/find_state/" class="navbar-item">
-                                            States
-                                        </a>
-                                    </td>
-                                    <td>
-                                        <a href="/threats" class="navbar-item">
-                                            Threats
-                                        </a>
-                                    </td>
-
-                                    {% if current_user.admin %}
-                                        <td>
-                                            <a href="{{ url_for('auth.signup') }}" class="navbar-item">
-                                                New User
-                                            </a>
-                                        </td>
-                                    {% endif %}
-                                {% endif %}
+                                <td>
+                                    <a href="/find_org" class="navbar-item">
+                                        Organizations
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="/find_state/" class="navbar-item">
+                                        States
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="/threats" class="navbar-item">
+                                        Threats
+                                    </a>
+                                </td>
                                 {% if not current_user.is_authenticated %}
                                     <td>
                                         <a href="{{ url_for('auth.login') }}" class="navbar-item">
@@ -79,6 +67,18 @@
                                         </a>
                                     </td>
                                 {% else %}
+                                    <td>
+                                        <a href="/profile" class="navbar-item">
+                                            Profile
+                                        </a>
+                                    </td>
+                                    {% if current_user.admin %}
+                                        <td>
+                                            <a href="{{ url_for('auth.signup') }}" class="navbar-item">
+                                                New User
+                                            </a>
+                                        </td>
+                                    {% endif %}
                                     <td>
                                         <a href="{{ url_for('auth.logout') }}" class="navbar-item">
                                             Logout

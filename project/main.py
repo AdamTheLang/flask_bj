@@ -16,8 +16,13 @@ def index():
 @main.route('/edit_org/<org_id>', methods=['GET', 'POST'])
 @main.route('/edit_org/', methods=['GET', 'POST'])
 @main.route('/edit_org', methods=['GET', 'POST'])
-@login_required
 def edit_org(org_id=None):
+    if not current_user.is_authenticated:
+        if request.method == 'POST':
+            abort(401)
+        if org_id is None:
+            abort(401)
+
     org = None
     if org_id:
         org = models.Groups.query.filter_by(id=org_id).first()
@@ -49,7 +54,6 @@ def edit_org(org_id=None):
 
 @main.route('/find_org/', methods=['GET'])
 @main.route('/find_org', methods=['GET'])
-@login_required
 def find_org():
     form = forms.OrganizationSearchForm(request.args)
     query = models.Groups.query
@@ -80,10 +84,12 @@ def find_org():
 @main.route('/threats/<threat_id>', methods=['GET', 'POST'])
 @main.route('/threats/', methods=['GET', 'POST'])
 @main.route('/threats', methods=['GET', 'POST'])
-@login_required
 def threats(threat_id=None):
-    if not current_user.admin and request.method == 'POST':
-        abort(401)
+    if not current_user.is_authenticated:
+        if request.method == 'POST':
+            abort(401)
+        if threat_id is None:
+            abort(401)
 
     all_threats = list(
         models.Threats.query.order_by(models.Threats.threat_key).all()
@@ -109,24 +115,14 @@ def threats(threat_id=None):
 
 
 @main.route('/edit_state/<abbrev>', methods=['GET', 'POST'])
-@main.route('/edit_state/', methods=['GET'])
-@main.route('/edit_state', methods=['GET'])
-@login_required
 def states(abbrev=None):
     if request.method == 'POST' and not current_user.admin:
         abort(401)
 
     all_states = list(models.States.query.order_by(models.States.name).all())
     all_abbrevs = [st.abbrev for st in all_states]
-    if abbrev is not None and abbrev not in all_abbrevs:
+    if abbrev not in all_abbrevs:  # catches None too
         abort(404)
-
-    if request.method == 'POST' and abbrev is None:
-        abort(404)
-
-    if abbrev is None:
-        form = forms.StateForm()
-        return render_template('edit_state.html', form=form, abbrev=abbrev)
 
     this_state = [s for s in all_states if abbrev == s.abbrev][0]
     form = forms.StateForm(obj=this_state)
@@ -173,7 +169,6 @@ def states(abbrev=None):
 
 @main.route('/find_state/', methods=['GET'])
 @main.route('/find_state', methods=['GET'])
-@login_required
 def find_state():
     form = forms.StateSearchForm(request.args)
     query = models.States.query
@@ -197,6 +192,12 @@ def find_state():
 @main.route('/edit_leg/', methods=['GET', 'POST'])
 @main.route('/edit_leg/', methods=['GET', 'POST'])
 def legislation(leg_id=None):
+    if not current_user.is_authenticated:
+        if request.method == 'POST':
+            abort(401)
+        if leg_id is None:
+            abort(401)
+
     legislation = None
     if leg_id:
         legislation = models.Legislation.query.filter_by(id=leg_id).first()

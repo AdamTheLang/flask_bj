@@ -5,7 +5,7 @@
     <p><font size="-1">Note: If you change your password or email you will be logged out.</font></p><br>
     <form method="POST">
         {{ form.csrf_token }}
-        {% from "_formhelpers.html" import render_field %}
+        {% from "_formhelpers.html" import render_field with context %}
         <fieldset>
             <p></p>
             {{ render_field(form.name, size=40) }}

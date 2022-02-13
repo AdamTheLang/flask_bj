@@ -41,7 +41,7 @@
     <form method="POST" name="edit_state">
         {{ form.csrf_token }}
         {% if current_user.admin %}
-            {% from "_formhelpers.html" import render_field %}
+            {% from "_formhelpers.html" import render_field with context %}
         {% else %}
             {% from "_displayhelpers.html" import render_field %}
         {% endif %}
@@ -145,7 +145,7 @@
         </fieldset>
 
         <br>
-        {% from "_formhelpers.html" import render_field_no_label %}
+        {% from "_formhelpers.html" import render_field_no_label with context %}
         <fieldset>
             <div class="tab10">
             <p><font size="+2">Election Subversion/Politicization</font></p>
