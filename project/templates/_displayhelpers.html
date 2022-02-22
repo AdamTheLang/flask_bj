@@ -1,5 +1,7 @@
-{% macro render_field(field, rows=0, cols=0, size=0) %}
-  <dt><p class="tab10"><bold><font size="+1">{{ field.label }}</font></bold></p></dt>
-  <dd><p class="tab10" style="white-space: pre-wrap;">{{ field.data }}</p></dd>
-  <br>
+{% macro render_field(field) %}
+  <dt><p class="tab10">{{ field.label }}</p></dt>
+  <dd><p class="tab10">
+    {% set x=kwargs.__setitem__("disabled", True) %}
+    {{ field(**kwargs)|safe }}
+  </p></dd>
 {% endmacro %}

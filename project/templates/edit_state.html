@@ -62,9 +62,14 @@
         </fieldset>
         <br>
         <fieldset>
-            <p class="tab10"><font size="+2">Strategy</font></p>
-            {{ render_field(form.republican_strategy, rows=6, cols=39) }}
-            {{ render_field(form.our_strategy, rows=6, cols=39) }}
+            <p class="tab10">
+                <font size="+2">Strategy</font>
+                <button type="button" onclick="hideShow('Strategy')">Hide/Show</button>
+            </p>
+            <div class="tab10" id="Strategy" style="display:none">
+            {{ render_field(form.republican_strategy, rows=30) }}
+            {{ render_field(form.our_strategy, rows=30) }}
+            </div>
             <br>
         </fieldset>
         <br>
@@ -90,12 +95,18 @@
                 <button type="button" onclick="hideShow('further_info')">Hide/Show</button>
             </p>
             <div id="further_info" style="display:none">
-                <a href="https://ballotpedia.org">Ballotpedia</a>
-                <br><a href="https://tracker.votingrightslab.org/pending/snapshot">Voting Rights Lab State Voting Rights Tracker</a>
-                <br><a href="https://docs.google.com/spreadsheets/d/1nWvvBRGMFbLM83gw8nEq4SeSFKCvp0lMwNq3t-d5WK0/edit#gid=554515035">
+                <a href="https://ballotpedia.org">
+                    Ballotpedia
+                </a><br>
+                <a href="https://tracker.votingrightslab.org/pending/snapshot">
+                    Voting Rights Lab State Voting Rights Tracker
+                </a><br>
+                <a href="https://docs.google.com/spreadsheets/d/1nWvvBRGMFbLM83gw8nEq4SeSFKCvp0lMwNq3t-d5WK0/edit#gid=554515035">
                     Voting Rights Lab 50-State Chart
-                </a>
-               <br><br>
+                </a><br>
+                <a href="https://docs.google.com/ spreadsheets/d/1kwMh_5yEEC1YsVhp7u2PbsHDvqL-sy9y/ edit#gid=1524397377">
+                    Voting Threat Description Spreadsheet
+                </a><br><br>
             </div>
         </div></fieldset>
         <div id="legislation"></div>
@@ -111,7 +122,6 @@
                     <tr>
                         <td><a href="/edit_leg/{{ bill.id }}">{{ bill.abbrev }}</a></td>
                         <td><a href="/edit_leg/{{ bill.id }}">{{ bill.name }}</a></td>
-                        <td>{{ legislation_threat_lookup[bill.threat_level] }}</td>
                     <tr>
                 {% endfor %}
             </table>
