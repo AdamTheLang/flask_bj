@@ -88,8 +88,6 @@ def threats(threat_id=None):
     if not current_user.is_authenticated:
         if request.method == 'POST':
             abort(401)
-        if threat_id is None:
-            abort(401)
 
     all_threats = list(
         models.Threats.query.order_by(models.Threats.threat_key).all()

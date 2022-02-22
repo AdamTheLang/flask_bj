@@ -374,3 +374,16 @@ class Threats(db.Model):
     source = db.Column(db.Text)
     does = db.Column(db.Text)
     matters = db.Column(db.Text)
+
+# class SocialMediaEntity(db.Model):
+#     def _str_(self):
+#         return self.name
+#
+#     id = db.Column(db.Integer, primary_key=True)
+#     name = db.Column(db.Text)
+#     entity_type = db.Column(db.Integer)
+#     sm_org = db.Column(db.Text)
+#     org_type = db.Column(db.Integer)
+#
+
+
