@@ -1,8 +1,12 @@
+from functools import partial
+import re
+
 from wtforms.fields import (
     BooleanField,
     DateField,
     IntegerField,
     PasswordField,
+    RadioField,
     SelectField,
     SelectMultipleField,
     StringField,
@@ -15,7 +19,7 @@ from wtforms.ext.sqlalchemy.fields import (
 )
 from flask_login import current_user
 from flask_wtf import FlaskForm
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import check_password_hash
 
 from project import models
 
@@ -67,7 +71,7 @@ def _nameless_threat_query_factory():
     for nt in threats:
         nt.__str__ = lambda x: " "
         nt.__repr__ = lambda x: " "
-    print('_nameless_threat_query_factory: %s' % (len(threats),))
+
     return threats
 
 
@@ -75,7 +79,6 @@ def _election_threat_query_factory():
     threats = list(models.Threats.query.filter(
         models.Threats.threat_key < 200
     ).order_by(models.Threats.threat_key).all())
-    print('_election_threat_query_factory: %s' % (len(threats),))
 
     return threats
 
@@ -84,7 +87,6 @@ def _antivoter_threat_query_factory():
     threats = list(models.Threats.query.filter(
         models.Threats.threat_key >= 200
     ).order_by(models.Threats.threat_key).all())
-    print('_antivoter_threat_query_factory: %s' % (len(threats),))
 
     return threats
 
@@ -115,7 +117,6 @@ class ProfileForm(FlaskForm):
         query_factory=_state_query_factory_just_states
     )
 
-
     old_password = PasswordField('Old Password', [
         validate_old_password_field
     ])
@@ -132,7 +133,7 @@ class OrganizationSearchForm(FlaskForm):
         super(OrganizationSearchForm, self).__init__(*args, **kwargs)
         states = models.States.query.order_by(models.States.name).all()
         self.state.choices = (
-            [('Any', 'Any'), ] + [(s.abbrev, s.name) for s in states]
+            [('Any', 'Any'), ] + [(s.abbrev, s.name) for s in states if s.abbrev]
         )
 
         issues = models.Issues.query.order_by(models.Issues.issue_name).all()
@@ -169,9 +170,12 @@ def validate_not_empty_state(form, field):
     return True
 
 
-def validate_add_http(form, field):
+def validate_add_http(https, form, field):
+    prefix = 'http://'
+    if https:
+        prefix = 'https://'
     if not field.data.startswith('http'):
-        field.data = "http://" + field.data
+        field.data = prefix + field.data
     return True
 
 
@@ -192,7 +196,7 @@ class OrganizationEditForm(FlaskForm):
         'Organization URL',
         [
             validators.Optional(),
-            validate_add_http,
+            partial(validate_add_http, False),
             validators.Length(max=200),
             validators.URL(message='Invalid URL')
         ]
@@ -229,7 +233,7 @@ class OrganizationEditForm(FlaskForm):
     )
 
     organization_notes = TextAreaField(
-        label = 'Organization Notes',
+        label='Organization Notes',
         validators=[validators.Length(max=5000)]
     )
 
@@ -477,12 +481,175 @@ class LegislationForm(FlaskForm):
         validators=[validators.Length(max=5000)]
     )
 
-    election_threats =  QueryMultiCheckboxField(
+    election_threats = QueryMultiCheckboxField(
         label='Legislation Election Subversion/Politicization Threats',
         query_factory=_election_threat_query_factory
     )
 
-    antivoter_threats =  QueryMultiCheckboxField(
+    antivoter_threats = QueryMultiCheckboxField(
         label='Legislation Anti-Voter/Anti-Voting Threats',
         query_factory=_antivoter_threat_query_factory
     )
+
+
+def _sm_org_type_query_factory():
+    return models.MediaEntityTypes.query.order_by(
+        models.MediaEntityTypes.display
+    ).all()
+
+
+def _beat_query_factory():
+    return models.MediaBeats.query.order_by(
+        models.MediaBeats.display
+    ).all()
+
+
+def validate_add_host(host, form, field):
+    assert host
+    if not field.data:
+        return True
+
+    if '/' not in field.data or '.' not in field.data:
+        field.data = field.data.replace('@', '')
+        field.data = host + field.data
+
+    return True
+
+
+def validate_comma_separated(form, field):
+    if not field.data:
+        return True
+
+    field_list = re.split('; *|, *|[^,;]  *', field.data)
+    field.data = ", ".join(field_list)
+
+    return True
+
+
+def validate_hashes(form, field):
+    if not field.data:
+        return True
+
+    field_list = field.data.split(', ')
+    field_list = [tag if tag.startswith('#') else '#' + tag for tag in field_list]
+
+    field.data = ', '.join(field_list)
+
+    return True
+
+
+class SocialMediaForm(FlaskForm):
+
+    name = StringField(
+        "Social Media Contact Name",
+        validators=[validators.length(min=2, max=150)]
+    )
+
+    sm_org = StringField(
+        "Organization",
+        validators=[validators.length(max=150)]
+    )
+
+    entity_type_obj = QuerySelectField(
+        "Type",
+        query_factory=_sm_org_type_query_factory
+    )
+
+    state_obj = QuerySelectField(
+        label='State',
+        query_factory=_state_query_factory,
+        validators=[validate_not_empty_state]
+    )
+
+    twitter = StringField(
+        'Twitter URL',
+        [
+            validators.Optional(),
+            partial(validate_add_host, 'twitter.com/'),
+            partial(validate_add_http, True),
+            validators.Length(max=200),
+            validators.URL(message='Invalid URL')
+        ]
+    )
+
+    instagram = StringField(
+        'Instagram URL',
+        [
+            validators.Optional(),
+            partial(validate_add_host, 'instagram.com/'),
+            partial(validate_add_http, True),
+            validators.Length(max=200),
+            validators.URL(message='Invalid URL')
+        ]
+    )
+
+    tiktok = StringField(
+        'Tiktok URL',
+        [
+            validators.Optional(),
+            partial(validate_add_host, 'tiktok.com/@'),
+            partial(validate_add_http, True),
+            validators.Length(max=200),
+            validators.URL(message='Invalid URL')
+        ]
+    )
+
+    hashtags = StringField(
+        'Hashtags',
+        [
+            validate_comma_separated,
+            validate_hashes,
+            validators.Length(max=200)
+        ]
+    )
+
+    beat_obj = QuerySelectField(
+        'Beat',
+        query_factory=_beat_query_factory
+    )
+
+    contact_notes = TextAreaField(
+        'Contact Notes',
+        [validators.Length(max=20000)]
+    )
+
+
+class SocialMediaSearchForm(FlaskForm):
+    def __init__(self, *args, **kwargs):
+        super(SocialMediaSearchForm, self).__init__(*args, **kwargs)
+
+        states = models.States.query.order_by(models.States.name).all()
+        self.state.choices = (
+            [('Any', 'Any'), ] + [(s.abbrev, s.name) for s in states if s.abbrev]
+        )
+        self.state.default = 'Any'
+
+        types = models.MediaEntityTypes.query.order_by(
+            models.MediaEntityTypes.display
+        ).all()
+        self.entity_type.choices = (
+            [('Any', 'Any'), ] + [(t.id, t.display) for t in types]
+        )
+        self.entity_type.default = 'Any'
+
+        beats = models.MediaBeats.query.order_by(models.MediaBeats.display).all()
+        self.beat.choices = (
+            [('Any', 'Any'), ] + [(b.id, b.display) for b in beats]
+        )
+        self.beat.default = 'Any'
+
+    name = StringField(
+        "Social Media Contact Name",
+        validators=[validators.length(min=2, max=150)]
+    )
+
+    sm_org = StringField(
+        "Organization",
+        validators=[validators.length(max=150)]
+    )
+
+    entity_type = SelectField('Type')
+
+    state = SelectField('State')
+
+    beat = SelectField('Special Beat')

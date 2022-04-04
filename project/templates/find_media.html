@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block style %}
+    table {
+        border: 1px solid black;
+        border-collapse: collapse;
+        width: 75%;
+    }
+    td {
+        border: 1px solid black;
+        border-collapse: collapse;
+        padding: 5px;
+    }
+    th {
+        height: 70px;
+        border: 1px solid black;
+        border-collapse: collapse;
+        padding: 5px;
+    }
+{% endblock %}
+
+{% block content %}
+    <p><font size="+4">Social Media Contacts</font></p>
+    {% if current_user.is_authenticated %}
+        <p><font size="+2"><a href="/edit_media">Create New Contact</a></font></p>
+    {% endif %}
+    <form method="GET">
+        {% from "_formhelpers.html" import render_always_editable_field with context %}
+        <fieldset>
+            <p class="tab10"><font size="+2">Find</font></p>
+            {{ render_always_editable_field(form.name, size=40) }}
+            {{ render_always_editable_field(form.sm_org, size=40) }}
+            {{ render_always_editable_field(form.entity_type) }}
+            {{ render_always_editable_field(form.state) }}
+            {{ render_always_editable_field(form.beat) }}
+            <br>
+        </fieldset>
+        <br>
+        <input type="submit" value="Search" style="width: 100px; height: 35px;">
+    </form>
+    <br><br>
+
+    {% if results %}
+        <table>
+            <tr><th>Media Contact</th></tr>
+            {% from "_media_result.html" import media_list_item with context %}
+            <style>
+                a {
+                    text-decoration: underline;
+                }
+                a:hover {
+                    text-decoration: none;
+                }
+            </style>
+            {% for result in results %}
+                {{ media_list_item(result) }}
+            {% endfor %}
+        </table>
+    {% else %}
+        <p><font size="+2">No results.</font></p>
+    {% endif %}
+{% endblock %}
