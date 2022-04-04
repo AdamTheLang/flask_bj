@@ -196,7 +196,7 @@ class Legislation(db.Model):
     doj_response = db.Column(db.Text)
     sources = db.Column(db.Text)
 
-    threats =  db.relationship("Threats", secondary=legislation_threats)
+    threats = db.relationship("Threats", secondary=legislation_threats)
     groups = db.relationship("Groups", secondary=group_legislation, viewonly=True)
 
     @property
@@ -375,15 +375,44 @@ class Threats(db.Model):
     does = db.Column(db.Text)
     matters = db.Column(db.Text)
 
-# class SocialMediaEntity(db.Model):
-#     def _str_(self):
-#         return self.name
-#
-#     id = db.Column(db.Integer, primary_key=True)
-#     name = db.Column(db.Text)
-#     entity_type = db.Column(db.Integer)
-#     sm_org = db.Column(db.Text)
-#     org_type = db.Column(db.Integer)
-#
+
+class SocialMediaEntities(db.Model):
+    def _str__(self):
+        return self.name
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.Text)
+
+    entity_type = db.Column(db.Text, db.ForeignKey('media_entity_types.id'))
+    entity_type_obj = db.relationship('MediaEntityTypes')
+
+    sm_org = db.Column(db.Text)
+    state = db.Column(db.String(2), db.ForeignKey('states.abbrev'))
+    state_obj = db.relationship("States")
+
+    twitter = db.Column(db.Text)
+    instagram = db.Column(db.Text)
+    tiktok = db.Column(db.Text)
+
+    hashtags = db.Column(db.Text)
+
+    beat = db.Column(db.Text, db.ForeignKey('media_beats.id'))
+    beat_obj = db.relationship('MediaBeats')
+
+    contact_notes = db.Column(db.Text)
 
 
+class MediaEntityTypes(db.Model):
+    def __str__(self):
+        return self.display
+
+    id = db.Column(db.Text, primary_key=True)
+    display = db.Column(db.Text)
+
+
+class MediaBeats(db.Model):
+    def __str__(self):
+        return self.display
+
+    id = db.Column(db.Text, primary_key=True)
+    display = db.Column(db.Text)

@@ -92,6 +92,10 @@ def threats(threat_id=None):
     all_threats = list(
         models.Threats.query.order_by(models.Threats.threat_key).all()
     )
+
+    election_threats = [t for t in all_threats if int(t.threat_key) < 200]
+    antivoter_threats = [t for t in all_threats if int(t.threat_key) >= 200]
+
     if threat_id is not None:
         this_threat = [
             threat for threat in all_threats if int(threat.id) == int(threat_id)
@@ -109,7 +113,9 @@ def threats(threat_id=None):
         db.session.commit()
         return redirect('/threats')
 
-    return render_template('threats.html', form=form, all_threats=all_threats)
+    return render_template('threats.html', form=form,
+                           election_threats=election_threats,
+                           antivoter_threats=antivoter_threats)
 
 
 @main.route('/edit_state/<abbrev>', methods=['GET', 'POST'])
@@ -128,7 +134,7 @@ def states(abbrev=None):
         form.populate_obj(this_state)
         db.session.add(this_state)
         db.session.commit()
-        return redirect('/edit_state')
+        return redirect('/find_state')
 
     election_threat_zip = zip(form.election_state_threats,
                               form.election_threat_litigation,
@@ -214,3 +220,74 @@ def legislation(leg_id=None):
         return redirect('/edit_state/' + legislation.state_obj.abbrev + "#legislation")
 
     return render_template('edit_leg.html', form=form)
+
+
+@main.route('/content')
+@main.route('/content/')
+def content():
+    return render_template('content.html')
+
+
+@main.route('/further_info')
+@main.route('/further_info/')
+def further_info():
+    return render_template('further_info.html')
+
+
+@main.route('/edit_media', methods=['GET', 'POST'])
+@main.route('/edit_media/', methods=['GET', 'POST'])
+@main.route('/edit_media/<media_id>', methods=['GET', 'POST'])
+def edit_media(media_id=None):
+    if not current_user.is_authenticated:
+        if request.method == 'POST':
+            abort(401)
+        if media_id is None:
+            abort(401)
+
+    media = None
+    if media_id:
+        media = models.SocialMediaEntities.query.filter_by(id=media_id).first()
+        if not media:
+            abort(404)
+        form = forms.SocialMediaForm(obj=media)
+    else:
+        form = forms.SocialMediaForm()
+
+    if form.validate_on_submit():
+        if not media:
+            media = models.SocialMediaEntities()
+        form.populate_obj(media)
+        db.session.add(media)
+        db.session.commit()
+        return redirect('/find_media')
+
+    return render_template('edit_media.html', form=form)
+
+
+@main.route('/find_media/', methods=['GET'])
+@main.route('/find_media', methods=['GET'])
+def find_media():
+    form = forms.SocialMediaSearchForm(request.args)
+    query = models.SocialMediaEntities.query
+    if form.name.data:
+        query = query.filter(
+            models.SocialMediaEntities.name.like('%' + form.name.data + '%')
+        )
+
+    if form.sm_org.data:
+        query = query.filter(
+            models.SocialMediaEntities.sm_org.like('%' + form.sm_org.data + '%')
+        )
+
+    if form.entity_type.data and form.entity_type.data != 'Any':
+        query = query.filter_by(entity_type=form.entity_type.data)
+
+    if form.state.data and form.state.data != 'Any':
+        query = query.filter_by(state=form.state.data)
+
+    if form.beat.data and form.beat.data != 'Any':
+        query = query.filter_by(beat=form.beat.data)
+
+    results = list(query.order_by(models.SocialMediaEntities.name).all())
+
+    return render_template('find_media.html', form=form, results=results)

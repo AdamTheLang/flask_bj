@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <p><font size="+4">Social Media Organizations</font>
+    <p><font size="+2">Add/Edit</font>
+    <form method="POST">
+        {{ form.csrf_token }}
+        {% from "_formhelpers.html" import render_field with context %}
+        {% from "_formhelpers.html" import render_url_field with context %}
+        <br><fieldset>
+            <p class="tab10">
+                <font size="+2">Details</font>
+            </p>
+            {{ render_field(form.name, size=40) }}
+            {{ render_field(form.sm_org) }}
+            {{ render_field(form.entity_type_obj) }}
+            {{ render_field(form.state_obj) }}
+            <br>
+        </fieldset>
+        <br><fieldset>
+            <p class="tab10">
+                <font size="+2">URLs</font>
+            </p>
+            {{ render_url_field(form.twitter) }}
+            {{ render_url_field(form.instagram) }}
+            {{ render_url_field(form.tiktok) }}
+            <br>
+        </fieldset>
+        <br><fieldset>
+            <p class="tab10">
+                <font size="+2">Media Info</font>
+            </p>
+            {{ render_field(form.hashtags) }}
+            {{ render_field(form.beat_obj) }}
+            {{ render_field(form.contact_notes, rows=20) }}
+        <br>
+        </fieldset><br>
+        <input type="submit" disabled style="display: none" aria-hidden="true" />
+        {% if current_user.is_authenticated %}
+            <input type="submit" value="Save" style="width: 100px; height: 35px;">
+        {% else %}
+            <input type="submit" value="Save" style="width: 100px; height: 35px;" disabled>
+        {% endif %}
+    </form>
+{% endblock %}
