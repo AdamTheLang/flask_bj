@@ -395,6 +395,7 @@ class SocialMediaEntities(db.Model):
     tiktok = db.Column(db.Text)
 
     hashtags = db.Column(db.Text)
+    keyphrases = db.Column(db.Text)
 
     beat = db.Column(db.Text, db.ForeignKey('media_beats.id'))
     beat_obj = db.relationship('MediaBeats')

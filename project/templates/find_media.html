@@ -33,6 +33,14 @@
             {{ render_always_editable_field(form.entity_type) }}
             {{ render_always_editable_field(form.state) }}
             {{ render_always_editable_field(form.beat) }}
+            {{ render_always_editable_field(
+                form.hashtag,
+                placeholder='please search on only one hashtag at a time'
+            ) }}
+            {{ render_always_editable_field(
+                form.keyphrase,
+                placeholder='e.g. "january 6 committee", "judiciary", "jan", "6", or "huge ears"'
+            ) }}
             <br>
         </fieldset>
         <br>
