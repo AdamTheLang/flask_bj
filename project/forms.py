@@ -526,7 +526,7 @@ def validate_comma_separated(form, field):
     return True
 
 
-def validate_hashes(form, field):
+def validate_hashtags(form, field):
     if not field.data:
         return True
 
@@ -534,6 +534,16 @@ def validate_hashes(form, field):
     field_list = [tag if tag.startswith('#') else '#' + tag for tag in field_list]
 
     field.data = ', '.join(field_list)
+
+    return True
+
+
+def validate_keyphrases(form, field):
+    if not field.data:
+        return True
+
+    field_list = re.split('; *|, *', field.data)
+    field.data = ", ".join(field_list)
 
     return True
 
@@ -598,7 +608,7 @@ class SocialMediaForm(FlaskForm):
         'Hashtags',
         [
             validate_comma_separated,
-            validate_hashes,
+            validate_hashtags,
             validators.Length(max=200)
         ]
     )
@@ -613,6 +623,13 @@ class SocialMediaForm(FlaskForm):
         [validators.Length(max=20000)]
     )
 
+    keyphrases = StringField(
+        'Keyphrases (comma separated, for search)',
+        [
+            validate_keyphrases,
+            validators.Length(max=200),
+        ]
+    )
 
 class SocialMediaSearchForm(FlaskForm):
     def __init__(self, *args, **kwargs):
@@ -639,17 +656,18 @@ class SocialMediaSearchForm(FlaskForm):
         self.beat.default = 'Any'
 
     name = StringField(
-        "Social Media Contact Name",
-        validators=[validators.length(min=2, max=150)]
-    )
-
-    sm_org = StringField(
-        "Organization",
+        'Social Media Contact Name',
         validators=[validators.length(max=150)]
     )
+
+    sm_org = StringField('Organization', [validators.length(max=150)])
 
     entity_type = SelectField('Type')
 
     state = SelectField('State')
 
     beat = SelectField('Special Beat')
+
+    keyphrase = StringField('Keyphrase Search', [validators.length(max=50)])
+
+    hashtag = StringField('Hashtag Search', [validators.length(max=50)])

@@ -279,6 +279,11 @@ def find_media():
             models.SocialMediaEntities.sm_org.like('%' + form.sm_org.data + '%')
         )
 
+    if form.keyphrase.data:
+        query = query.filter(
+            models.SocialMediaEntities.keyphrases.like('%' + form.keyphrase.data + '%')
+        )
+
     if form.entity_type.data and form.entity_type.data != 'Any':
         query = query.filter_by(entity_type=form.entity_type.data)
 
