@@ -538,7 +538,7 @@ def validate_hashtags(form, field):
     return True
 
 
-def validate_keyphrases(form, field):
+def validate_comma_separated_phrases(form, field):
     if not field.data:
         return True
 
@@ -626,10 +626,19 @@ class SocialMediaForm(FlaskForm):
     keyphrases = StringField(
         'Keyphrases (comma separated, for search)',
         [
-            validate_keyphrases,
+            validate_comma_separated_phrases,
             validators.Length(max=200),
         ]
     )
+
+    owners = StringField(
+        'Owners of This Contact',
+        [
+            validate_comma_separated_phrases,
+            validators.Length(max=200),
+        ]
+    )
+
 
 class SocialMediaSearchForm(FlaskForm):
     def __init__(self, *args, **kwargs):

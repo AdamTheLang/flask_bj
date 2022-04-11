@@ -1,5 +1,13 @@
 {% macro media_list_item(media) %}
-    <tr><td>
-        <a href="/edit_media/{{ media.id }}">{{ media.name }}</a>
-    </td></tr>
+    <tr>
+        <td>
+            <a href="/edit_media/{{ media.id }}">{{ media.name }}</a>
+        </td>
+        <td>
+            {{ media.sm_org }}
+        </td>
+        <td>
+            {{ media.owners }}
+        </td>
+    </tr>
 {% endmacro %}

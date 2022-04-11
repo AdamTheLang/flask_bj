@@ -402,6 +402,7 @@ class SocialMediaEntities(db.Model):
 
     contact_notes = db.Column(db.Text)
 
+    owners = db.Column(db.Text)
 
 class MediaEntityTypes(db.Model):
     def __str__(self):
