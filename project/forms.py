@@ -45,7 +45,6 @@ def validate_is_phone(form, field):
 def validate_old_password_field(form, field):
     if field.data:
         if check_password_hash(current_user.password, field.data):
-            print(current_user.password, field.data)
             return True
         raise validators.ValidationError("Incorrect existing password.")
     if form.new_password.data and form.confirm.data == form.new_password.data:
