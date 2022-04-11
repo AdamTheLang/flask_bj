@@ -4,7 +4,7 @@
     table {
         border: 1px solid black;
         border-collapse: collapse;
-        width: 75%;
+        width: 95%;
     }
     td {
         border: 1px solid black;
@@ -49,8 +49,12 @@
     <br><br>
 
     {% if results %}
-        <table>
-            <tr><th>Media Contact</th></tr>
+        <table style="width:95%">
+            <tr>
+                <th>Media Contact</th>
+                <th>Organization</th>
+                <th>Owners</th>
+            </tr>
             {% from "_media_result.html" import media_list_item with context %}
             <style>
                 a {
