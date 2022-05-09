@@ -1,38 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <script>
-        function goToNewPage() {
-            if(document.getElementById('state_list').value){
-                window.location.href = "/edit_state/" + document.getElementById('state_list').value;
-            }
-        }
-        function hideShowSotS() {
-            var sots_div = document.getElementById("SotS");
-            if (sots_div.style.display === "none") {
-                sots_div.style.display = "block";
-            } else {
-                sots_div.style.display = "none";
-            }
-        }
-        function hideShowDefunct() {
-            var defunct_div = document.getElementById("DefunctBills");
-            if (defunct_div.style.display === "none") {
-                defunct_div.style.display = "block";
-            } else {
-                defunct_div.style.display = "none";
-            }
-        }
-        function hideShow(label) {
-            var section = document.getElementById(label);
-            if (section.style.display === "none") {
-                section.style.display = "block";
-            } else {
-                section.style.display = "none";
-            }
-        }
-    </script>
-
     <p><font size="+4">State of the State</font>
     {% if not current_user.admin %}
         Note: read only. Only admins may edit.

@@ -6,7 +6,6 @@ from wtforms.fields import (
     DateField,
     IntegerField,
     PasswordField,
-    RadioField,
     SelectField,
     SelectMultipleField,
     StringField,
@@ -547,6 +546,19 @@ def validate_comma_separated_phrases(form, field):
     return True
 
 
+def validate_twitter_handle(form, field):
+    if field.data is None:
+        field.data = ''
+
+    if not field.data:
+        return True
+
+    field.data = field.data.strip(' @/')
+    field.data = '@' + field.data
+
+    return True
+
+
 class SocialMediaForm(FlaskForm):
 
     name = StringField(
@@ -571,13 +583,11 @@ class SocialMediaForm(FlaskForm):
     )
 
     twitter = StringField(
-        'Twitter URL',
+        'Twitter Handle',
         [
             validators.Optional(),
-            partial(validate_add_host, 'twitter.com/'),
-            partial(validate_add_http, True),
-            validators.Length(max=200),
-            validators.URL(message='Invalid URL')
+            validate_twitter_handle,
+            validators.Length(max=20)
         ]
     )
 
@@ -622,16 +632,16 @@ class SocialMediaForm(FlaskForm):
         [validators.Length(max=20000)]
     )
 
-    keyphrases = StringField(
+    keyphrases = TextAreaField(
         'Keyphrases (comma separated, for search)',
         [
             validate_comma_separated_phrases,
-            validators.Length(max=200),
+            validators.Length(max=2000),
         ]
     )
 
     owners = StringField(
-        'Owners of This Contact',
+        'Owners of This Contact (Up to 3)',
         [
             validate_comma_separated_phrases,
             validators.Length(max=200),

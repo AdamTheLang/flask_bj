@@ -32,7 +32,6 @@
             {{ render_always_editable_field(form.sm_org, size=40) }}
             {{ render_always_editable_field(form.entity_type) }}
             {{ render_always_editable_field(form.state) }}
-            {{ render_always_editable_field(form.beat) }}
             {{ render_always_editable_field(
                 form.hashtag,
                 placeholder='please search on only one hashtag at a time'
@@ -52,7 +51,9 @@
         <table style="width:95%">
             <tr>
                 <th>Media Contact</th>
+                <th>Twitter Handle</th>
                 <th>Organization</th>
+                <th>Type</th>
                 <th>Owners</th>
             </tr>
             {% from "_media_result.html" import media_list_item with context %}

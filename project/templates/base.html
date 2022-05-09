@@ -37,6 +37,16 @@
             bottom: 1px;
         }
     </style>
+    <script>
+        function hideShow(label) {
+            var section = document.getElementById(label);
+            if (section.style.display === "none") {
+                section.style.display = "block";
+            } else {
+                section.style.display = "none";
+            }
+        }
+    </script>
 </head>
 
 <body>
