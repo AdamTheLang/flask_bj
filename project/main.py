@@ -290,9 +290,6 @@ def find_media():
     if form.state.data and form.state.data != 'Any':
         query = query.filter_by(state=form.state.data)
 
-    if form.beat.data and form.beat.data != 'Any':
-        query = query.filter_by(beat=form.beat.data)
-
     results = list(query.order_by(models.SocialMediaEntities.name).all())
 
     return render_template('find_media.html', form=form, results=results)

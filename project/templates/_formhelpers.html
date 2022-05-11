@@ -58,6 +58,27 @@
   </p></dd>
 {% endmacro %}
 
+{% macro render_twitter_field(field) %}
+  {% if field.data %}
+    <dt><p class="tab10">{{ field.label }} (<a href="https://twitter.com/{{ field.data }}">visit Twitter</a>)</p></dt>
+  {% else %}
+    <dt><p class="tab10">{{ field.label }}</p></dt>
+  {% endif %}
+  <dd><p class="tab10">
+    {% if not current_user.is_authenticated %}
+      {% set x=kwargs.__setitem__("disabled", True) %}
+    {% endif %}
+    {{ field(**kwargs)|safe }}
+    {% if field.errors %}
+      <ul class=errors>
+      {% for error in field.errors %}
+        <li class="error">{{ error }}</li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+  </p></dd>
+{% endmacro %}
+
 {% macro render_email_field(field) %}
   {% if field.data %}
     <dt><p class="tab10">{{ field.label }} (<a href="mailto:{{ field.data }}">send email</a>)</p></dt>

@@ -1,10 +1,16 @@
 {% macro media_list_item(media) %}
     <tr>
         <td>
-            <a href="/edit_media/{{ media.id }}">{{ media.name }}</a>
+            <a href="/edit_media/{{ media.id }}">{{ media.name }}</a>&nbsp;&nbsp;
         </td>
         <td>
-            {{ media.sm_org }}
+            {{ media.twitter }}&nbsp;&nbsp;
+        </td>
+        <td>
+            {{ media.sm_org }}&nbsp;&nbsp;
+        </td>
+        <td>
+            {{ media.entity_type_obj }}&nbsp;&nbsp;
         </td>
         <td>
             {{ media.owners }}
